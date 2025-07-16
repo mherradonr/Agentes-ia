@@ -1,0 +1,4648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agentes de IA y Frameworks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Nunito:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: linear-gradient(135deg, #f3f3f3, #eaeded, #fff8f0);
+      --main-card: #fff;
+      --main-dark: #232f3e;
+      --main-light: #eaeded;
+      --main-text: #232f3e;
+      --main-muted: #565959;
+      --success: #067d62;
+      --warning: #ff9900;
+      --error: #d13212;
+      --amazon-orange: #ff9900;
+      --amazon-orange-light: #ffb84d;
+      --amazon-blue: #232f3e;
+      --amazon-blue-light: #146eb4;
+      --amazon-gray: #eaeded;
+      --amazon-gray-light: #f3f3f3;
+      --party-gradient: linear-gradient(135deg, #ff9900, #ffb84d, #146eb4, #232f3e);
+      --party-gradient-2: linear-gradient(45deg, #ff9900, #ffb84d, #f3f3f3);
+      --neon-gradient: linear-gradient(135deg, #146eb4 0%, #232f3e 100%);
+      --rainbow-gradient: linear-gradient(90deg, #ff9900, #ffb84d, #146eb4, #232f3e, #ff6600);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+      background: var(--main-bg);
+      color: var(--main-text);
+      line-height: 1.6;
+      font-weight: 400;
+    }
+    header {
+      background: linear-gradient(135deg, #ff9900 0%, #ff6600 50%, #232f3e 100%);
+      color: #fff;
+      padding: 40px 0;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(255,153,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      opacity: 0.3;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3em;
+      font-weight: 800;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+      font-family: 'Montserrat', sans-serif;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(45deg, #fff, #f0f8ff, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    header p {
+      margin: 12px 0 0 0;
+      font-size: 1.3em;
+      opacity: 0.95;
+      font-weight: 500;
+      position: relative;
+      z-index: 2;
+    }
+    nav {
+      text-align: center;
+      background: linear-gradient(135deg, #eaeded 0%, #f3f3f3 50%, #fff8f0 100%);
+      border-bottom: 3px solid rgba(255,153,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 0 10px;
+    }
+    nav button {
+      background: none;
+      color: var(--main-dark);
+      border: none;
+      border-bottom: 4px solid transparent;
+      border-radius: 0;
+      padding: 18px 20px;
+      margin: 0 2px;
+      font-size: 0.95em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      white-space: nowrap;
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    nav button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(102,126,234,0.3), transparent);
+      transition: left 0.6s;
+    }
+    nav button:hover::before {
+      left: 100%;
+    }
+    nav button.active, nav button:focus {
+      border-bottom: 4px solid var(--amazon-orange);
+      color: var(--amazon-blue);
+      background: linear-gradient(135deg, rgba(255,153,0,0.15), rgba(255,255,255,0.9));
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255,153,0,0.3);
+    }
+    nav button:hover {
+      background: linear-gradient(135deg, rgba(255,153,0,0.2), rgba(255,255,255,0.95));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255,153,0,0.2);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .tab-section {
+      display: none;
+      animation: fadeIn 0.6s ease-in;
+    }
+    .tab-section.active {
+      display: block;
+    }
+    /* Estilos para los headers de sección */
+    .section-header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 50px 30px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(168,237,234,0.1));
+      border-radius: 25px;
+      border: 3px solid rgba(102,126,234,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .section-header.amazon {
+      background: linear-gradient(135deg, rgba(255,153,0,0.1), rgba(255,182,77,0.1));
+      border: 3px solid rgba(255,153,0,0.3);
+    }
+    .section-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #ff9900, #ffb84d, #146eb4, #232f3e);
+      animation: rainbow 3s linear infinite;
+    }
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    .section-header.amazon::before {
+      background: linear-gradient(90deg, var(--amazon-orange), #ffb84d, #ff6b6b, var(--amazon-orange));
+      background-size: 200% 100%;
+    }
+    .section-header h2 {
+      margin: 0 0 20px 0;
+      font-size: 3em;
+      color: var(--amazon-blue);
+      font-weight: 800;
+      background: linear-gradient(135deg, #ff9900, #ff6600, #232f3e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Montserrat', sans-serif;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .section-header.amazon h2 {
+      background: linear-gradient(135deg, var(--amazon-orange), #ff6b6b, #ffb84d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-header p {
+      margin: 0;
+      font-size: 1.3em;
+      color: var(--main-muted);
+      font-weight: 500;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    /* Información educativa */
+    .info-text {
+      background: linear-gradient(135deg, #f8f9fa, #ffffff);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0 50px 0;
+      border-left: 6px solid var(--main-dark);
+      box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .info-text::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.1), transparent);
+      border-radius: 50%;
+      transform: translate(30px, -30px);
+    }
+    .info-text.amazon {
+      border-left: 6px solid var(--amazon-orange);
+      background: linear-gradient(135deg, #fff8f0, #ffffff);
+    }
+    .info-text.amazon::before {
+      background: linear-gradient(135deg, rgba(255,153,0,0.1), transparent);
+    }
+    .info-text h3 {
+      margin: 0 0 16px 0;
+      color: var(--main-dark);
+      font-size: 1.5em;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .info-text.amazon h3 {
+      color: var(--amazon-blue);
+    }
+    .info-text p {
+      margin: 0;
+      color: var(--main-text);
+      line-height: 1.8;
+      font-size: 1.05em;
+    }
+    /* Estilos para la demo de pensamiento de agentes */
+    .thinking-demo {
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 25px 0;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 2;
+      min-height: 500px;
+    }
+    .thinking-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #e0e0e0;
+    }
+    .thinking-title {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: var(--amazon-blue);
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .thinking-controls {
+      display: flex;
+      gap: 12px;
+    }
+    .demo-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .demo-btn.primary {
+      background: linear-gradient(135deg, var(--amazon-orange), #ffb84d);
+      color: white;
+    }
+    .demo-btn.secondary {
+      background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+      color: var(--amazon-blue);
+    }
+    .demo-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+    .scenario-selector {
+      margin-bottom: 20px;
+    }
+    .scenario-selector select {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 2px solid #e0e0e0;
+      font-size: 1.1em;
+      font-family: 'Nunito', sans-serif;
+      background: white;
+    }
+    .thinking-process {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      min-height: 400px;
+    }
+    .agent-brain {
+      background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+      border-radius: 15px;
+      padding: 20px;
+      border: 3px solid #667eea;
+      position: relative;
+      overflow: hidden;
+    }
+    .brain-title {
+      text-align: center;
+      font-weight: 700;
+      color: var(--amazon-blue);
+      margin-bottom: 20px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .thought-bubble {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 20px;
+      margin: 10px 0;
+      opacity: 0;
+      transform: translateY(20px) scale(0.8);
+      transition: all 0.6s ease;
+      font-size: 0.95em;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+    }
+    .thought-bubble.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .thought-bubble::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 8px solid #667eea;
+    }
+    .thinking-steps {
+      background: linear-gradient(135deg, #fff8f0, #ffffff);
+      border-radius: 15px;
+      padding: 20px;
+      border: 3px solid var(--amazon-orange);
+    }
+    .step-container {
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateX(30px);
+      transition: all 0.8s ease;
+    }
+    .step-container.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--amazon-orange), #ffb84d);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-right: 15px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .step-title {
+      font-weight: 700;
+      color: var(--amazon-blue);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.1em;
+    }
+    .step-content {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 4px solid var(--amazon-orange);
+      margin-left: 55px;
+      font-size: 0.95em;
+      line-height: 1.6;
+    }
+    .confidence-bar {
+      margin-top: 10px;
+    }
+    .confidence-label {
+      font-size: 0.9em;
+      color: var(--main-muted);
+      margin-bottom: 5px;
+    }
+    .confidence-progress {
+      width: 100%;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b6b, #ff9800, #4caf50);
+      border-radius: 4px;
+      transition: width 1s ease;
+      width: 0%;
+    }
+    .final-decision {
+      background: linear-gradient(135deg, #e8f5e8, #ffffff);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+      border-left: 6px solid #4caf50;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+    }
+    .final-decision.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .decision-title {
+      font-weight: 700;
+      color: #2e7d32;
+      margin-bottom: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.2em;
+    }
+    .decision-content {
+      color: #1b5e20;
+      font-size: 1.05em;
+      line-height: 1.6;
+    }
+    .agent-type-selector {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .agent-type-btn {
+      padding: 8px 16px;
+      border: 2px solid var(--amazon-orange);
+      background: white;
+      color: var(--amazon-blue);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9em;
+    }
+    .agent-type-btn.active {
+      background: linear-gradient(135deg, var(--amazon-orange), #ffb84d);
+      color: white;
+    }
+    .agent-type-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255,153,0,0.3);
+    }
+    /* Botón de acceso directo */
+    .access-button {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--amazon-orange), #ffb84d);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 15px;
+      text-decoration: none;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.4s ease;
+      box-shadow: 0 8px 25px rgba(255,153,0,0.3);
+      margin: 20px 0;
+      font-size: 1.1em;
+    }
+    .access-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255,153,0,0.4);
+      background: linear-gradient(135deg, #ffb84d, var(--amazon-orange));
+    }
+    .access-button::before {
+      content: '🚀 ';
+      margin-right: 8px;
+    }
+    /* Proceso paso a paso */
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin: 40px 0;
+    }
+    .process-step {
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      border: 3px solid transparent;
+      transition: all 0.4s ease;
+      box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+    }
+    .process-step::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--rainbow-gradient);
+      border-radius: 20px 20px 0 0;
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    .process-step:hover::before {
+      transform: scaleX(1);
+    }
+    .process-step:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(255,153,0,0.2);
+      border-color: var(--amazon-orange);
+    }
+    .step-number {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--amazon-orange), #ffb84d);
+      color: white;
+      border-radius: 50%;
+      font-size: 1.5em;
+      font-weight: 800;
+      line-height: 60px;
+      margin-bottom: 20px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .step-title {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: var(--amazon-blue);
+      margin-bottom: 15px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .step-description {
+      color: var(--main-text);
+      line-height: 1.6;
+    }
+    .demo-container {
+      background: var(--party-gradient);
+      border-radius: 25px;
+      padding: 40px;
+      margin: 40px 0;
+      border: 4px solid rgba(255,255,255,0.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+    }
+    .demo-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+      animation: shimmer 4s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    .demo-container h3 {
+      color: white;
+      margin-bottom: 30px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 2em;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+      position: relative;
+      z-index: 2;
+      font-weight: 800;
+    }
+    .dashboard-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin: 60px 0;
+      padding: 50px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(168,237,234,0.08));
+      border-radius: 30px;
+      border: 3px solid rgba(102,126,234,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .dashboard-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .dashboard-info {
+      position: relative;
+      z-index: 2;
+    }
+    .dashboard-info h2 {
+      margin-top: 0;
+      font-size: 2.8em;
+      color: var(--main-text);
+      margin-bottom: 25px;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .dashboard-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+    }
+    .metric-card {
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(34,51,102,0.15);
+      padding: 30px;
+      text-align: center;
+      transition: all 0.4s ease;
+      border: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--rainbow-gradient);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    .metric-card:hover::before {
+      transform: scaleX(1);
+    }
+    .metric-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 50px rgba(102,126,234,0.25);
+      border-color: #667eea;
+    }
+    .metric-value {
+      font-size: 2.5em;
+      font-weight: 800;
+      color: var(--main-dark);
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .metric-label {
+      font-size: 1.05em;
+      color: var(--main-text);
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .chart-container {
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      border-radius: 25px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(34,51,102,0.15);
+      margin-bottom: 40px;
+      border: 3px solid rgba(102,126,234,0.1);
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 2;
+    }
+    .chart-container canvas {
+      max-height: 350px !important;
+    }
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    .info-card {
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      border-radius: 25px;
+      padding: 40px;
+      box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+      transition: all 0.4s ease;
+      border: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    .info-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--rainbow-gradient);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    .info-card:hover::before {
+      transform: scaleX(1);
+    }
+    .info-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(102,126,234,0.2);
+      border-color: #667eea;
+    }
+    .info-card h3 {
+      color: var(--main-dark);
+      margin-top: 0;
+      font-size: 1.6em;
+      margin-bottom: 20px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { transform: translateX(-30px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    .card {
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      border: 3px solid #e3e8ee;
+      border-radius: 25px;
+      box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+      padding: 40px;
+      margin-bottom: 20px;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(102,126,234,0.05), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .card:hover::after {
+      opacity: 1;
+    }
+    .card.amazon {
+      border: 3px solid rgba(255,153,0,0.3);
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: var(--rainbow-gradient);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+      border-radius: 25px 25px 0 0;
+    }
+    .card.amazon::before {
+      background: linear-gradient(90deg, var(--amazon-orange), #ffb84d, #ff6b6b);
+    }
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+    .card-collapsible {
+      cursor: pointer;
+      transition: all 0.5s ease;
+      position: relative;
+    }
+    .card-collapsible:hover {
+      box-shadow: 0 20px 60px rgba(102,126,234,0.2);
+      background: linear-gradient(135deg, #f0f8ff, #ffffff);
+      transform: translateY(-10px) scale(1.02);
+      border-color: #667eea;
+    }
+    .card-collapsible.amazon:hover {
+      box-shadow: 0 20px 60px rgba(255,153,0,0.2);
+      background: linear-gradient(135deg, #fff8f0, #ffffff);
+      border-color: var(--amazon-orange);
+    }
+    .card-collapsible .toggle-icon {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      font-size: 1.8em;
+      color: var(--main-dark);
+      user-select: none;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2));
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .card-collapsible:hover .toggle-icon {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: scale(1.2);
+      box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+    }
+    .card-collapsible.open .toggle-icon {
+      transform: rotate(90deg) scale(1.2);
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+    .card-details {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(.4,0,.2,1);
+      transform: translateY(-15px);
+    }
+    .card-collapsible.open .card-details {
+      max-height: 800px;
+      opacity: 1;
+      margin-top: 30px;
+      transform: translateY(0);
+    }
+    .card-title {
+      font-weight: 800;
+      font-size: 1.6em;
+      color: var(--main-dark);
+      margin-bottom: 20px;
+      padding-right: 70px;
+      font-family: 'Montserrat', sans-serif;
+      line-height: 1.3;
+    }
+    .card-title.amazon {
+      color: var(--amazon-blue);
+    }
+    .badges {
+      margin-bottom: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .badge {
+      display: inline-block;
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-size: 0.95em;
+      font-weight: 700;
+      background: linear-gradient(135deg, #eaeded, #f3f3f3);
+      color: var(--amazon-blue);
+      border: 2px solid transparent;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .badge.amazon {
+      background: linear-gradient(135deg, var(--amazon-orange), #ffb84d);
+      color: white;
+    }
+    .badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+      transition: left 0.6s;
+    }
+    .badge:hover::before {
+      left: 100%;
+    }
+    .badge:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+    }
+    .baja { background: linear-gradient(135deg, #4caf50, #45a049); color: white; }
+    .media { background: linear-gradient(135deg, #ff9800, #f57c00); color: white; }
+    .alta { background: linear-gradient(135deg, #f44336, #d32f2f); color: white; }
+    .muy-alta { background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; }
+    .minima { background: linear-gradient(135deg, #607d8b, #455a64); color: white; }
+    .ventajas h4, .desventajas h4 {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 1.2em;
+      font-weight: 700;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .ventajas h4 { color: var(--success); }
+    .desventajas h4 { color: var(--error); }
+    .ventajas h4::before { content: "✅ "; margin-right: 10px; font-size: 1.3em; }
+    .desventajas h4::before { content: "❌ "; margin-right: 10px; font-size: 1.3em; }
+    .ventajas ul, .desventajas ul {
+      margin: 0;
+      padding-left: 25px;
+      list-style: none;
+    }
+    .ventajas li, .desventajas li {
+      margin-bottom: 10px;
+      position: relative;
+      padding-left: 25px;
+      animation: slideIn 0.4s ease forwards;
+      opacity: 0;
+      font-size: 1.05em;
+      line-height: 1.6;
+    }
+    .ventajas li::before {
+      content: "▶";
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-size: 0.9em;
+      font-weight: 700;
+    }
+    .desventajas li::before {
+      content: "▶";
+      position: absolute;
+      left: 0;
+      color: var(--error);
+      font-size: 0.9em;
+      font-weight: 700;
+    }
+    .card-collapsible.open .ventajas li,
+    .card-collapsible.open .desventajas li {
+      animation-delay: calc(var(--i) * 0.1s);
+      opacity: 1;
+    }
+    .click-hint {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px solid #f0f0f0;
+      font-size: 0.95em;
+      color: #888;
+      font-style: italic;
+      transition: color 0.3s ease;
+      font-weight: 500;
+    }
+    .card-collapsible:hover .click-hint {
+      color: var(--main-dark);
+      font-weight: 600;
+    }
+    /* Footer */
+    .footer {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+      margin-top: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="footerGrain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="5" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23footerGrain)"/></svg>');
+      opacity: 0.3;
+    }
+    .footer-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .footer h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      background: linear-gradient(45deg, #fff, #f0f8ff, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .footer p {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+    .footer-signature {
+      font-size: 1.2em;
+      font-weight: 700;
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 2px solid rgba(255,255,255,0.3);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .footer-signature .author {
+      background: linear-gradient(45deg, #fff, #ffeb3b, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      font-size: 1.3em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 768px) {
+      .thinking-process {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .agent-brain {
+        order: 2;
+      }
+      .thinking-steps {
+        order: 1;
+      }
+      .dashboard-hero {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 30px;
+      }
+      .card-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+      .dashboard-metrics {
+        grid-template-columns: 1fr;
+      }
+      nav {
+        padding: 0 5px;
+      }
+      nav button {
+        padding: 15px 12px;
+        font-size: 0.85em;
+        margin: 0 1px;
+      }
+      .card {
+        padding: 30px;
+      }
+      .card-collapsible .toggle-icon {
+        top: 30px;
+        right: 30px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.6em;
+      }
+      .section-header {
+        padding: 30px 20px;
+        margin-bottom: 30px;
+      }
+      .section-header h2 {
+        font-size: 2.2em;
+      }
+      .section-header p {
+        font-size: 1.1em;
+      }
+      .chart-container {
+        padding: 20px;
+      }
+      .chart-container canvas {
+        max-height: 280px !important;
+      }
+      header h1 {
+        font-size: 2.2em;
+      }
+      .container {
+        padding: 30px 15px;
+      }
+      .process-steps {
+        grid-template-columns: 1fr;
+      }
+    }
+    .loading {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 4px solid rgba(102,126,234,.3);
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .pulse {
+      animation: pulse 2.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    /* Mejoras adicionales */
+    .glow {
+      box-shadow: 0 0 20px rgba(102,126,234,0.5);
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #764ba2, #f093fb);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🤖 Agentes de IA y Frameworks</h1>
+    <p>Explora el fascinante mundo de la Inteligencia Artificial</p>
+  </header>
+  <nav>
+    <button class="tab-btn active" data-tab="inicio">🏠 Inicio</button>
+    <button class="tab-btn" data-tab="agentes">🤖 Tipos de Agentes</button>
+    <button class="tab-btn" data-tab="como-piensa">🧠 ¿Cómo Piensa?</button>
+    <button class="tab-btn" data-tab="como-funciona">⚙️ ¿Cómo Funciona?</button>
+    <button class="tab-btn" data-tab="formacion">🎓 Formación</button>
+    <button class="tab-btn" data-tab="casos-uso">💼 Casos de Uso</button>
+    <button class="tab-btn" data-tab="herramientas">🛠️ Herramientas</button>
+    <button class="tab-btn" data-tab="retos">⚠️ Retos</button>
+    <button class="tab-btn" data-tab="amazonq">🟠 Amazon Q</button>
+    <button class="tab-btn" data-tab="cedric">💬 Cedric</button>
+    <button class="tab-btn" data-tab="partyrock">🎉 PartyRock</button>
+    <button class="tab-btn" data-tab="sapien">🧠 Sapien</button>
+    <button class="tab-btn" data-tab="cual-uso">🤔 ¿Cuál uso?</button>
+    <button class="tab-btn" data-tab="frameworks">⚙️ Frameworks</button>
+    <button class="tab-btn" data-tab="industrias">🏭 Industrias</button>
+    <button class="tab-btn" data-tab="metricas">📊 Métricas</button>
+    <button class="tab-btn" data-tab="tendencias">📈 Tendencias</button>
+  </nav>
+  <div class="container">
+    <!-- INICIO -->
+    <div id="inicio" class="tab-section active">
+      <div class="info-text">
+        <h3>💡 ¿Qué encontrarás en este dashboard?</h3>
+        <p>Este dashboard interactivo te guiará a través del fascinante mundo de los agentes de inteligencia artificial. Desde los conceptos básicos hasta las implementaciones más avanzadas de empresas como Amazon, descubrirás cómo la IA está transformando la forma en que trabajamos y vivimos.</p>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🧠 ¿Qué son los Agentes de IA?</h3>
+          <p>Los agentes de IA son sistemas autónomos que pueden percibir su entorno, procesar información y tomar decisiones para alcanzar objetivos específicos. Desde simples sensores hasta complejos sistemas de aprendizaje automático.</p>
+        </div>
+        <div class="info-card">
+          <h3>🚀 Aplicaciones Actuales</h3>
+          <p>Desde asistentes virtuales hasta sistemas de trading automatizado, los agentes de IA están revolucionando sectores como tecnología, marketing, retail y servicios financieros.</p>
+        </div>
+        <div class="info-card">
+          <h3>🌟 Futuro Prometedor</h3>
+          <p>Con un crecimiento proyectado del 45.82% anual, el mercado de agentes de IA alcanzará los $236 billones USD para 2034, impulsado por la adopción empresarial masiva.</p>
+        </div>
+      </div>
+      <div class="dashboard-hero">
+        <div class="dashboard-info">
+          <h2>Bienvenido al Mundo de los Agentes de IA</h2>
+          <p>Los agentes de inteligencia artificial representan una evolución fundamental en la automatización y toma de decisiones. Explora los diferentes tipos, frameworks y aplicaciones que están transformando industrias enteras.</p>
+          <div class="dashboard-metrics">
+            <div class="metric-card pulse">
+              <div class="metric-value" id="metric-agentes">5+</div>
+              <div class="metric-label">Tipos de Agentes</div>
+            </div>
+            <div class="metric-card pulse">
+              <div class="metric-value" id="metric-frameworks">4</div>
+              <div class="metric-label">Frameworks</div>
+            </div>
+            <div class="metric-card pulse">
+              <div class="metric-value" id="metric-cagr">45.82%</div>
+              <div class="metric-label">Crecimiento Anual</div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="heroChart" width="400" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+    <!-- AGENTES -->
+    <div id="agentes" class="tab-section">
+      <div class="section-header">
+        <h2>🤖 Tipos de Agentes de IA</h2>
+        <p>Explora los diferentes tipos de agentes según su complejidad y autonomía</p>
+      </div>
+      <div class="info-text">
+        <h3>🔍 ¿Qué es un Agente de IA?</h3>
+        <p>Un agente de inteligencia artificial es un sistema computacional que actúa de forma autónoma en un entorno para alcanzar objetivos específicos. Estos agentes pueden percibir su entorno a través de sensores, procesar información, tomar decisiones y ejecutar acciones. La clasificación de los agentes se basa en su nivel de complejidad, autonomía y capacidad de aprendizaje, desde simples sistemas reactivos hasta sofisticados agentes que aprenden y se adaptan continuamente.</p>
+      </div>
+      <div id="agentsGrid"></div>
+    </div>
+    <!-- ¿CÓMO PIENSA UN AGENTE DE IA? -->
+    <div id="como-piensa" class="tab-section">
+      <div class="section-header">
+        <h2>🧠 ¿Cómo Piensa un Agente de IA?</h2>
+        <p>Visualiza el proceso de razonamiento paso a paso de diferentes tipos de agentes</p>
+      </div>
+      <div class="info-text">
+        <h3>🔍 El Proceso Mental de la IA</h3>
+        <p>Aunque los agentes de IA no "piensan" como los humanos, siguen procesos de razonamiento estructurados que pueden visualizarse. Cada tipo de agente tiene patrones de pensamiento únicos: desde reacciones simples hasta complejas evaluaciones de múltiples opciones. Esta demo interactiva te permite observar cómo diferentes agentes procesan información y toman decisiones.</p>
+      </div>
+      <div class="demo-container">
+        <h3>🎭 Simulador de Pensamiento de Agentes IA</h3>
+        <div class="thinking-demo">
+          <div class="thinking-header">
+            <h4 class="thinking-title">🧠 Proceso de Razonamiento en Tiempo Real</h4>
+            <div class="thinking-controls">
+              <button class="demo-btn primary" onclick="startThinking()">🚀 Iniciar Simulación</button>
+              <button class="demo-btn secondary" onclick="resetThinking()">🔄 Reiniciar</button>
+            </div>
+          </div>
+          <div class="agent-type-selector">
+            <button class="agent-type-btn active" data-agent="reflejo">🔄 Agente Reflejo</button>
+            <button class="agent-type-btn" data-agent="objetivo">🎯 Basado en Objetivos</button>
+            <button class="agent-type-btn" data-agent="utilidad">⚖️ Basado en Utilidad</button>
+            <button class="agent-type-btn" data-agent="aprendizaje">🧠 Con Aprendizaje</button>
+          </div>
+          <div class="scenario-selector">
+            <select id="scenarioSelect">
+              <option value="navegacion">🚗 Robot navegando en habitación</option>
+              <option value="recomendacion">🛒 Sistema de recomendación de productos</option>
+              <option value="trading">📈 Agente de trading financiero</option>
+              <option value="asistente">💬 Asistente virtual respondiendo consulta</option>
+            </select>
+          </div>
+          <div class="thinking-process">
+            <div class="agent-brain">
+              <h4 class="brain-title">🧠 Mente del Agente</h4>
+              <div id="thoughtBubbles">
+                <!-- Las burbujas de pensamiento se generarán dinámicamente -->
+              </div>
+            </div>
+            <div class="thinking-steps">
+              <h4 style="text-align: center; color: var(--amazon-blue); margin-bottom: 20px;">📋 Pasos de Razonamiento</h4>
+              <div id="thinkingSteps">
+                <!-- Los pasos se generarán dinámicamente -->
+              </div>
+              <div id="finalDecision" class="final-decision">
+                <div class="decision-title">🎯 Decisión Final</div>
+                <div class="decision-content" id="decisionContent">
+                  Esperando simulación...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 16px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+          <strong>💡 Experimenta:</strong> Selecciona diferentes tipos de agentes y escenarios para ver cómo cambia su proceso de pensamiento
+        </p>
+      </div>
+    </div>
+    <!-- ¿CÓMO FUNCIONA UN AGENTE DE IA? -->
+    <div id="como-funciona" class="tab-section">
+      <div class="section-header amazon">
+        <h2>⚙️ ¿Cómo funciona un agente de IA?</h2>
+        <p>Descubre el ciclo de vida y funcionamiento interno de los agentes inteligentes</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🔍 Definición de Agente de IA</h3>
+        <p>Un agente de inteligencia artificial es un sistema capaz de percibir su entorno, razonar, tomar decisiones y ejecutar acciones para alcanzar objetivos definidos. En Amazon, los agentes de IA pueden automatizar tareas, interactuar con clientes, analizar datos y aprender de la experiencia para mejorar continuamente su rendimiento.</p>
+      </div>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="step-number">1</div>
+          <div class="step-title">🔍 Percepción</div>
+          <div class="step-description">Recoge información de su entorno a través de texto, voz, datos, APIs y sensores diversos para comprender el contexto actual.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-number">2</div>
+          <div class="step-title">🧠 Razonamiento</div>
+          <div class="step-description">Analiza la información recopilada, evalúa opciones disponibles y define un plan de acción óptimo basado en sus objetivos.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-number">3</div>
+          <div class="step-title">⚡ Acción</div>
+          <div class="step-description">Ejecuta tareas específicas como responder consultas, buscar datos, automatizar procesos o interactuar con otros sistemas.</div>
+        </div>
+        <div class="process-step">
+          <div class="step-number">4</div>
+          <div class="step-title">📈 Aprendizaje</div>
+          <div class="step-description">Evalúa los resultados obtenidos, aprende de la experiencia y ajusta su comportamiento para mejorar el rendimiento futuro.</div>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🤖 Bot Tradicional vs Agente de IA</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+            <div style="background: #fef2f2; padding: 15px; border-radius: 10px; border-left: 4px solid #f44336;">
+              <h4 style="color: #d32f2f; margin-top: 0;">Bot Tradicional</h4>
+              <ul style="margin: 0; padding-left: 20px;">
+                <li>Sigue reglas fijas</li>
+                <li>Respuestas predefinidas</li>
+                <li>No aprende ni se adapta</li>
+                <li>Limitado a escenarios programados</li>
+              </ul>
+            </div>
+            <div style="background: #f0fdf4; padding: 15px; border-radius: 10px; border-left: 4px solid #4caf50;">
+              <h4 style="color: #2e7d32; margin-top: 0;">Agente de IA</h4>
+              <ul style="margin: 0; padding-left: 20px;">
+                <li>Se adapta dinámicamente</li>
+                <li>Genera respuestas contextuales</li>
+                <li>Aprende continuamente</li>
+                <li>Maneja situaciones imprevistas</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="info-card">
+          <h3>💡 Ejemplo en Amazon</h3>
+          <p><strong>Amazon Connect Contact Lens</strong> es un ejemplo perfecto de agente de IA en acción:</p>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>Percepción:</strong> Analiza conversaciones telefónicas en tiempo real</li>
+            <li><strong>Razonamiento:</strong> Detecta patrones, sentimientos y tendencias</li>
+            <li><strong>Acción:</strong> Proporciona insights y recomendaciones automáticas</li>
+            <li><strong>Aprendizaje:</strong> Mejora la detección basándose en feedback</li>
+          </ul>
+          <div style="background: #fff8f0; padding: 16px; border-radius: 12px; margin-top: 16px;">
+            <strong>🎯 Resultado:</strong> Ayuda a cumplir normativas automáticamente y mejora la experiencia del cliente.
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- FORMACIÓN Y RECURSOS INTERNOS -->
+    <div id="formacion" class="tab-section">
+      <div class="section-header amazon">
+        <h2>🎓 Formación y recursos internos</h2>
+        <p>Desarrolla tus competencias en IA con los programas de formación de Amazon</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>📚 Compromiso con la Formación</h3>
+        <p>Amazon ofrece formación gratuita y recursos internos para que los empleados desarrollen competencias en IA y agentes inteligentes. Nuestro objetivo es democratizar el acceso al conocimiento de IA y preparar a nuestros equipos para el futuro digital.</p>
+      </div>
+      <div class="training-resources">
+        <div class="resource-card">
+          <div class="resource-icon">🌟</div>
+          <div class="resource-title">AI Ready</div>
+          <div class="resource-description">Programa global de Amazon para formar a millones de personas en IA y cloud computing, con enfoque en IA generativa y machine learning.</div>
+          <ul class="resource-features">
+            <li>Cursos gratuitos de IA generativa</li>
+            <li>Formación en Amazon Bedrock</li>
+            <li>Certificaciones AWS</li>
+            <li>Acceso a CodeWhisperer</li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon">🇪🇸</div>
+          <div class="resource-title">AWS Futuro IA</div>
+          <div class="resource-description">Iniciativa específica para España dirigida a estudiantes y empleados, con cursos especializados y contacto directo con profesionales.</div>
+          <ul class="resource-features">
+            <li>Talleres presenciales</li>
+            <li>Mentorías personalizadas</li>
+            <li>Proyectos prácticos</li>
+            <li>Networking con expertos</li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon">🎯</div>
+          <div class="resource-title">AWS Skill Builder</div>
+          <div class="resource-description">Plataforma de formación integral con rutas especializadas para IA, agentes inteligentes y servicios cloud.</div>
+          <ul class="resource-features">
+            <li>Rutas de aprendizaje personalizadas</li>
+            <li>Laboratorios hands-on</li>
+            <li>Evaluaciones y badges</li>
+            <li>Contenido actualizado regularmente</li>
+          </ul>
+        </div>
+        <div class="resource-card">
+          <div class="resource-icon">🎓</div>
+          <div class="resource-title">AWS Educate</div>
+          <div class="resource-description">Programa educativo con cursos y laboratorios prácticos para desarrollar habilidades técnicas en IA y cloud.</div>
+          <ul class="resource-features">
+            <li>Créditos AWS gratuitos</li>
+            <li>Laboratorios guiados</li>
+            <li>Recursos para educadores</li>
+            <li>Comunidad de estudiantes</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🏆 Certificaciones Disponibles</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">🥇 <strong>AWS Certified AI Practitioner:</strong> Fundamentos de IA</li>
+            <li style="margin-bottom: 12px;">🥈 <strong>AWS Certified Machine Learning:</strong> Especialización ML</li>
+            <li style="margin-bottom: 12px;">🥉 <strong>AWS Certified Solutions Architect:</strong> Arquitectura cloud</li>
+            <li style="margin-bottom: 12px;">🎖️ <strong>AWS Certified Developer:</strong> Desarrollo de aplicaciones</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>💼 Ventajas para Empleados</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">⚡ <strong>Acceso preferente</strong> a nuevos cursos y beta features</li>
+            <li style="margin-bottom: 12px;">🚀 <strong>Participación en proyectos</strong> internos de IA</li>
+            <li style="margin-bottom: 12px;">💰 <strong>Aumento salarial</strong> y oportunidades de promoción</li>
+            <li style="margin-bottom: 12px;">🌐 <strong>Red profesional</strong> con expertos en IA</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- CASOS DE USO REALES EN AMAZON -->
+    <div id="casos-uso" class="tab-section">
+      <div class="section-header amazon">
+        <h2>💼 Casos de uso reales en Amazon</h2>
+        <p>Descubre cómo Amazon aplica agentes de IA para transformar la experiencia y eficiencia</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🌟 Transformación Digital con IA</h3>
+        <p>Amazon aplica agentes de IA en múltiples áreas para mejorar eficiencia, seguridad y experiencia de cliente. Estos casos de uso reales demuestran el poder transformador de la inteligencia artificial cuando se implementa estratégicamente.</p>
+      </div>
+      <div class="use-cases">
+        <div class="use-case-card">
+          <div class="use-case-header">
+            <div class="use-case-icon">🟠</div>
+            <div class="use-case-title">Amazon Q</div>
+          </div>
+          <div class="use-case-description">Asistente generativo para desarrolladores y empresas que automatiza la generación de código, análisis de datos y soporte interno con seguridad empresarial.</div>
+          <div class="use-case-impact">
+            <div class="impact-title">📊 Impacto Medible:</div>
+            <p>• 40% reducción en tiempo de desarrollo<br>• 60% mejora en productividad de desarrolladores<br>• 25% menos errores en código generado</p>
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-header">
+            <div class="use-case-icon">💬</div>
+            <div class="use-case-title">Cedric</div>
+          </div>
+          <div class="use-case-description">Chatbot interno seguro basado en Bedrock y Claude que permite consultas sobre políticas, resúmenes de documentos y brainstorming, garantizando privacidad total.</div>
+          <div class="use-case-impact">
+            <div class="impact-title">🔒 Impacto en Seguridad:</div>
+            <p>• 100% de datos mantenidos internamente<br>• 85% adopción entre empleados<br>• 35% aumento en productividad</p>
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-header">
+            <div class="use-case-icon">🎉</div>
+            <div class="use-case-title">PartyRock</div>
+          </div>
+          <div class="use-case-description">Plataforma no-code que permite a cualquier empleado crear aplicaciones generativas rápidamente y compartirlas con el equipo, democratizando la IA.</div>
+          <div class="use-case-impact">
+            <div class="impact-title">🚀 Impacto en Innovación:</div>
+            <p>• 500K+ apps creadas por usuarios<br>• 15 minutos promedio de creación<br>• 2M+ usuarios activos mensualmente</p>
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-header">
+            <div class="use-case-icon">📞</div>
+            <div class="use-case-title">Amazon Connect Contact Lens</div>
+          </div>
+          <div class="use-case-description">Agente autónomo que analiza llamadas en tiempo real, elimina datos sensibles automáticamente y ayuda a cumplir normativas de privacidad.</div>
+          <div class="use-case-impact">
+            <div class="impact-title">📈 Impacto Operacional:</div>
+            <p>• 90% reducción en tiempo de análisis<br>• 100% cumplimiento normativo automático<br>• 50% mejora en satisfacción del cliente</p>
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-header">
+            <div class="use-case-icon">🌐</div>
+            <div class="use-case-title">Nova Act</div>
+          </div>
+          <div class="use-case-description">Agente experimental para controlar navegadores web y automatizar tareas online como reservas, formularios y procesos repetitivos.</div>
+          <div class="use-case-impact">
+            <div class="impact-title">⚡ Impacto en Automatización:</div>
+            <p>• 80% reducción en tareas manuales<br>• 95% precisión en automatización<br>• Integración nativa con Alexa+</p>
+          </div>
+        </div>
+        <div class="use-case-card">
+          <div class="use-case-header">
+            <div class="use-case-icon">🧠</div>
+            <div class="use-case-title">Sapien</div>
+          </div>
+          <div class="use-case-description">Plataforma avanzada para análisis de datos empresariales que transforma información compleja en insights accionables y decisiones estratégicas.</div>
+          <div class="use-case-impact">
+            <div class="impact-title">📊 Impacto Analítico:</div>
+            <p>• 95% precisión en predicciones<br>• 80% reducción en tiempo de análisis<br>• 50+ fuentes de datos integradas</p>
+          </div>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🎯 Beneficios Globales</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">⚙️ <strong>Automatización:</strong> Eliminación de tareas repetitivas</li>
+            <li style="margin-bottom: 12px;">📊 <strong>Decisiones:</strong> Mejora en toma de decisiones basada en datos</li>
+            <li style="margin-bottom: 12px;">🔒 <strong>Seguridad:</strong> Mayor cumplimiento normativo</li>
+            <li style="margin-bottom: 12px;">🌐 <strong>Democratización:</strong> Acceso universal a herramientas de IA</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>📈 Métricas de Éxito</h3>
+          <div class="dashboard-metrics" style="margin: 20px 0;">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">2.3M</div>
+              <div class="metric-label">Consultas/mes</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">85%</div>
+              <div class="metric-label">Adopción empleados</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">40%</div>
+              <div class="metric-label">↑ Productividad</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- HERRAMIENTAS Y PLATAFORMAS -->
+    <div id="herramientas" class="tab-section">
+      <div class="section-header amazon">
+        <h2>🛠️ Herramientas y plataformas de Amazon para agentes de IA</h2>
+        <p>Ecosistema completo para crear, desplegar y gestionar agentes inteligentes</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🏗️ Ecosistema Integral de IA</h3>
+        <p>Amazon ofrece un ecosistema completo de herramientas para crear, desplegar y gestionar agentes de IA. Desde servicios gestionados hasta plataformas de desarrollo visual, tenemos todo lo necesario para implementar soluciones de IA a cualquier escala.</p>
+      </div>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-icon">🧠</div>
+            <div class="platform-title">Amazon Bedrock</div>
+          </div>
+          <div class="platform-description">Servicio gestionado que permite acceder a los principales modelos de IA generativa y construir agentes especializados sin preocuparse por la infraestructura.</div>
+          <ul class="platform-features">
+            <li>Acceso a modelos Claude, Llama 2, Titan</li>
+            <li>APIs unificadas para todos los modelos</li>
+            <li>Escalabilidad automática</li>
+            <li>Seguridad empresarial integrada</li>
+            <li>Fine-tuning personalizado</li>
+          </ul>
+        </div>
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-icon">🔬</div>
+            <div class="platform-title">Amazon SageMaker</div>
+          </div>
+          <div class="platform-description">Plataforma completa para experimentar, entrenar y desplegar modelos de machine learning y agentes personalizados con herramientas MLOps avanzadas.</div>
+          <ul class="platform-features">
+            <li>Notebooks Jupyter gestionados</li>
+            <li>Entrenamiento distribuido</li>
+            <li>Despliegue automático</li>
+            <li>Monitoreo de modelos</li>
+            <li>AutoML integrado</li>
+          </ul>
+        </div>
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-icon">📞</div>
+            <div class="platform-title">Amazon Connect</div>
+          </div>
+          <div class="platform-description">Solución de contact center en la nube con agentes inteligentes integrados, incluyendo Contact Lens para análisis automático de conversaciones.</div>
+          <ul class="platform-features">
+            <li>Contact Lens para análisis de llamadas</li>
+            <li>Chatbots inteligentes integrados</li>
+            <li>Enrutamiento inteligente</li>
+            <li>Analytics en tiempo real</li>
+            <li>Integración con CRM</li>
+          </ul>
+        </div>
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-icon">🎨</div>
+            <div class="platform-title">PartyRock</div>
+          </div>
+          <div class="platform-description">Entorno visual para crear y compartir aplicaciones generativas sin escribir código, ideal para prototipado rápido y experimentación.</div>
+          <ul class="platform-features">
+            <li>Editor drag-and-drop</li>
+            <li>Plantillas predefinidas</li>
+            <li>Compartir con un clic</li>
+            <li>Créditos gratuitos incluidos</li>
+            <li>Comunidad activa</li>
+          </ul>
+        </div>
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-icon">🌐</div>
+            <div class="platform-title">Nova Act</div>
+          </div>
+          <div class="platform-description">Agente experimental para automatizar acciones en navegadores web, integrable con Alexa+ para control por voz de tareas online.</div>
+          <ul class="platform-features">
+            <li>Automatización de navegadores</li>
+            <li>Control por voz con Alexa+</li>
+            <li>Integración con formularios</li>
+            <li>Reservas automáticas</li>
+            <li>API para desarrolladores</li>
+          </ul>
+        </div>
+        <div class="platform-card">
+          <div class="platform-header">
+            <div class="platform-icon">🔧</div>
+            <div class="platform-title">AWS Lambda</div>
+          </div>
+          <div class="platform-description">Computación serverless para ejecutar código de agentes sin gestionar servidores, ideal para microservicios y funciones específicas.</div>
+          <ul class="platform-features">
+            <li>Ejecución sin servidores</li>
+            <li>Escalado automático</li>
+            <li>Pago por uso</li>
+            <li>Integración nativa con AWS</li>
+            <li>Soporte múltiples lenguajes</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🎯 Ventajas del Ecosistema Amazon</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">🔗 <strong>Integración nativa:</strong> Todos los servicios funcionan juntos</li>
+            <li style="margin-bottom: 12px;">🔒 <strong>Seguridad empresarial:</strong> Cumplimiento y privacidad garantizados</li>
+            <li style="margin-bottom: 12px;">📈 <strong>Escalabilidad:</strong> Desde prototipo hasta producción</li>
+            <li style="margin-bottom: 12px;">💰 <strong>Modelo de precios:</strong> Paga solo por lo que usas</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>🚀 Casos de Implementación</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">🏢 <strong>Empresas:</strong> Chatbots internos con Bedrock + Lambda</li>
+            <li style="margin-bottom: 12px;">📞 <strong>Contact Centers:</strong> Amazon Connect + Contact Lens</li>
+            <li style="margin-bottom: 12px;">🔬 <strong>Investigación:</strong> SageMaker para modelos personalizados</li>
+            <li style="margin-bottom: 12px;">🎨 <strong>Prototipado:</strong> PartyRock para validación rápida</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- RETOS, LIMITACIONES Y MEJORES PRÁCTICAS -->
+    <div id="retos" class="tab-section">
+      <div class="section-header amazon">
+        <h2>⚠️ Retos, limitaciones y mejores prácticas</h2>
+        <p>Comprende los desafíos y aprende las mejores prácticas para implementar agentes de IA</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🎯 Implementación Responsable de IA</h3>
+        <p>Aunque los agentes de IA son potentes, existen retos y limitaciones importantes a tener en cuenta. La implementación exitosa requiere comprender estos desafíos y aplicar las mejores prácticas desarrolladas por Amazon a través de años de experiencia.</p>
+      </div>
+      <div class="challenges-grid">
+        <div class="challenge-card warning">
+          <div class="challenge-header">
+            <div class="challenge-icon">🔒</div>
+            <div class="challenge-title">Privacidad y Seguridad</div>
+          </div>
+          <div class="challenge-description">La protección de datos sensibles es fundamental cuando se trabaja con agentes de IA. Los datos pueden filtrarse inadvertidamente si no se toman las precauciones adecuadas.</div>
+          <div class="best-practices">
+            <h4>✅ Mejores Prácticas:</h4>
+            <ul>
+              <li>Usa agentes internos como Cedric para datos sensibles</li>
+              <li>Valida siempre qué información compartes</li>
+              <li>Implementa controles de acceso IAM</li>
+              <li>Audita regularmente el uso de datos</li>
+            </ul>
+          </div>
+        </div>
+        <div class="challenge-card error">
+          <div class="challenge-header">
+            <div class="challenge-icon">👁️</div>
+            <div class="challenge-title">Supervisión Humana</div>
+          </div>
+          <div class="challenge-description">Los agentes pueden cometer errores o malinterpretar instrucciones, especialmente en tareas críticas que requieren precisión absoluta.</div>
+          <div class="best-practices">
+            <h4>✅ Mejores Prácticas:</h4>
+            <ul>
+              <li>Revisa siempre las acciones en tareas críticas</li>
+              <li>Implementa checkpoints de validación</li>
+              <li>Mantén humanos en el loop para decisiones importantes</li>
+              <li>Establece límites claros de autonomía</li>
+            </ul>
+          </div>
+        </div>
+        <div class="challenge-card warning">
+          <div class="challenge-header">
+            <div class="challenge-icon">⚙️</div>
+            <div class="challenge-title">Limitaciones Técnicas</div>
+          </div>
+          <div class="challenge-description">No todos los agentes pueden aprender en tiempo real, algunos dependen de datos estructurados y los modelos generativos pueden "alucinar" información.</div>
+          <div class="best-practices">
+            <h4>✅ Mejores Prácticas:</h4>
+            <ul>
+              <li>Comprende las limitaciones de cada modelo</li>
+              <li>Valida outputs críticos independientemente</li>
+              <li>Usa datos de entrenamiento de alta calidad</li>
+              <li>Implementa sistemas de verificación cruzada</li>
+            </ul>
+          </div>
+        </div>
+        <div class="challenge-card success">
+          <div class="challenge-header">
+            <div class="challenge-icon">🏢</div>
+            <div class="challenge-title">Buenas Prácticas en Amazon</div>
+          </div>
+          <div class="challenge-description">Amazon ha desarrollado un conjunto de mejores prácticas basadas en años de experiencia implementando agentes de IA a escala empresarial.</div>
+          <div class="best-practices">
+            <h4>✅ Recomendaciones Clave:</h4>
+            <ul>
+              <li>Usa agentes internos (Cedric, Q) para tareas sensibles</li>
+              <li>Participa en formación interna regularmente</li>
+              <li>Reporta comportamientos inesperados</li>
+              <li>Colabora en la mejora continua de sistemas</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🎯 Principios de IA Responsable</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">🔍 <strong>Transparencia:</strong> Comprende cómo funcionan los agentes</li>
+            <li style="margin-bottom: 12px;">⚖️ <strong>Equidad:</strong> Evita sesgos en decisiones automatizadas</li>
+            <li style="margin-bottom: 12px;">🛡️ <strong>Seguridad:</strong> Protege datos y sistemas críticos</li>
+            <li style="margin-bottom: 12px;">📊 <strong>Accountability:</strong> Mantén registros de decisiones</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>🚨 Señales de Alerta</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">❌ <strong>Respuestas inconsistentes:</strong> El agente da información contradictoria</li>
+            <li style="margin-bottom: 12px;">🔄 <strong>Bucles infinitos:</strong> El agente se queda atascado en tareas</li>
+            <li style="margin-bottom: 12px;">📉 <strong>Degradación de rendimiento:</strong> Empeora con el tiempo</li>
+            <li style="margin-bottom: 12px;">🎭 <strong>Alucinaciones frecuentes:</strong> Inventa información falsa</li>
+          </ul>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #fff8f0, #ffffff); padding: 30px; border-radius: 20px; border-left: 6px solid var(--amazon-orange); margin: 40px 0;">
+        <h3 style="color: var(--amazon-blue); margin-top: 0;">💡 Consejo Final</h3>
+        <p style="font-size: 1.1em; line-height: 1.8;">
+          <strong>La clave del éxito</strong> con agentes de IA está en encontrar el equilibrio entre automatización y control humano. Comienza con casos de uso simples, aprende de la experiencia y escala gradualmente manteniendo siempre la supervisión adecuada.
+        </p>
+        <p style="font-size: 1.05em; color: var(--amazon-blue); margin-bottom: 0;">
+          🎯 <strong>Recuerda:</strong> Los agentes de IA son herramientas poderosas que amplifican las capacidades humanas, no las reemplazan.
+        </p>
+      </div>
+    </div>
+    <!-- AMAZON Q -->
+    <div id="amazonq" class="tab-section">
+      <div class="section-header amazon">
+        <h2>🟠 Amazon Q</h2>
+        <p>Suite de asistentes generativos de AWS orientados a desarrolladores y empresas</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🚀 ¿Qué es Amazon Q?</h3>
+        <p>Amazon Q es una suite completa de asistentes de IA generativa desarrollada por AWS, diseñada específicamente para acelerar la productividad de desarrolladores y empresas. Construido sobre Amazon Bedrock, ofrece seguridad de nivel empresarial con aislamiento de datos y control de acceso IAM. La suite incluye Q Developer para programadores, Q Business para búsqueda empresarial y Q Apps para crear aplicaciones sin código.</p>
+      </div>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://ask.qbusiness.aws.dev/#/chat" target="_blank" class="access-button">
+          Acceder a Amazon Q Business
+        </a>
+      </div>
+      <div class="chart-container">
+        <h3 style="text-align: center; color: var(--amazon-blue); margin-bottom: 24px;">📊 Comparativa de Servicios Amazon Q</h3>
+        <canvas id="amazonQChart"></canvas>
+      </div>
+      <div class="pricing-table" style="grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        <div class="pricing-card">
+          <h4>Q Developer Free</h4>
+          <div class="price">$0</div>
+          <ul class="features-list">
+            <li>✅ Generación básica de código</li>
+            <li>✅ Autocompletado en IDEs</li>
+            <li>✅ Explicación de código</li>
+            <li>❌ Funciones avanzadas limitadas</li>
+          </ul>
+        </div>
+        <div class="pricing-card">
+          <h4>Q Developer Pro</h4>
+          <div class="price">$19<span style="font-size: 0.5em;">/mes</span></div>
+          <ul class="features-list">
+            <li>✅ Todas las funciones Free</li>
+            <li>✅ Generación de tests automáticos</li>
+            <li>✅ Migraciones de código</li>
+            <li>✅ Soporte prioritario</li>
+          </ul>
+        </div>
+        <div class="pricing-card">
+          <h4>Q Business Lite</h4>
+          <div class="price">$3<span style="font-size: 0.5em;">/usuario</span></div>
+          <ul class="features-list">
+            <li>✅ Búsqueda en documentos</li>
+            <li>✅ Chat básico</li>
+            <li>✅ Integración con 40+ fuentes</li>
+            <li>❌ Funciones avanzadas limitadas</li>
+          </ul>
+        </div>
+        <div class="pricing-card">
+          <h4>Q Business Pro</h4>
+          <div class="price">$20<span style="font-size: 0.5em;">/usuario</span></div>
+          <ul class="features-list">
+            <li>✅ Todas las funciones Lite</li>
+            <li>✅ Plugins personalizados</li>
+            <li>✅ API ChatSync</li>
+            <li>✅ Análisis avanzado</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card amazon">
+          <h3 class="card-title amazon">🛠️ Funcionalidades Principales</h3>
+          <div class="badges">
+            <span class="badge amazon">Suite Completa</span>
+            <span class="badge amazon">AWS Native</span>
+          </div>
+          <p>Amazon Q ofrece un ecosistema integral de herramientas de IA generativa para diferentes necesidades empresariales y de desarrollo.</p>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>🔒 Seguridad empresarial:</strong> Aislamiento de datos y control IAM</li>
+            <li><strong>🔗 Integración nativa AWS:</strong> Conecta con todos los servicios AWS</li>
+            <li><strong>💻 Desarrollo acelerado:</strong> Generación y optimización de código</li>
+            <li><strong>🔍 Búsqueda inteligente:</strong> Encuentra información en documentos empresariales</li>
+            <li><strong>🎨 Creación sin código:</strong> Apps generativas con interfaz visual</li>
+            <li><strong>📊 Analytics integrado:</strong> Métricas de uso y rendimiento</li>
+          </ul>
+          <div style="background: #fff8f0; padding: 16px; border-radius: 12px; margin-top: 16px;">
+            <strong>💡 Ventaja clave:</strong> Amazon Q es la única suite que combina desarrollo, búsqueda empresarial y creación no-code en un ecosistema unificado y seguro.
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🛠️ Q Developer</h3>
+          <div class="badges">
+            <span class="badge amazon">Desarrollo</span>
+            <span class="badge amazon">IDE Integration</span>
+          </div>
+          <p>Asistente de IA especializado en desarrollo de software que acelera la productividad del programador.</p>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>Generación de código:</strong> Crea funciones completas desde comentarios</li>
+            <li><strong>Tests automáticos:</strong> Genera casos de prueba comprehensivos</li>
+            <li><strong>Migraciones:</strong> Actualiza código legacy a nuevas versiones</li>
+            <li><strong>Debugging:</strong> Identifica y sugiere correcciones de errores</li>
+            <li><strong>Documentación:</strong> Genera documentación automática</li>
+          </ul>
+          <div style="background: #fff8f0; padding: 16px; border-radius: 12px; margin-top: 16px;">
+            <strong>💡 Caso de uso:</strong> Un desarrollador reduce 40% el tiempo de desarrollo usando Q Developer para generar boilerplate code y tests unitarios.
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">💼 Q Business</h3>
+          <div class="badges">
+            <span class="badge amazon">Empresarial</span>
+            <span class="badge amazon">Búsqueda</span>
+          </div>
+          <p>Chatbot empresarial que busca y responde preguntas sobre documentos internos de la empresa.</p>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>Búsqueda inteligente:</strong> Encuentra información en wikis, PDFs, tickets</li>
+            <li><strong>Chat embebible:</strong> Integra en aplicaciones existentes</li>
+            <li><strong>40+ conectores:</strong> SharePoint, Confluence, Jira, Salesforce</li>
+            <li><strong>Seguridad IAM:</strong> Respeta permisos de usuario</li>
+            <li><strong>API ChatSync:</strong> Integración programática</li>
+          </ul>
+          <div style="background: #fff8f0; padding: 16px; border-radius: 12px; margin-top: 16px;">
+            <strong>💡 Caso de uso:</strong> Empleados de soporte encuentran respuestas 60% más rápido consultando la base de conocimiento via Q Business.
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🚀 Q Apps (Preview)</h3>
+          <div class="badges">
+            <span class="badge amazon">No-Code</span>
+            <span class="badge amazon">Preview</span>
+          </div>
+          <p>Plataforma no-code para crear micro-aplicaciones generativas personalizadas.</p>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>Creación visual:</strong> Arrastra y suelta componentes</li>
+            <li><strong>Despliegue rápido:</strong> Un clic para publicar</li>
+            <li><strong>Plantillas:</strong> Casos de uso pre-configurados</li>
+            <li><strong>Integración AWS:</strong> Conecta con servicios AWS</li>
+            <li><strong>Colaboración:</strong> Comparte apps con el equipo</li>
+          </ul>
+          <div style="background: #fff8f0; padding: 16px; border-radius: 12px; margin-top: 16px;">
+            <strong>💡 Caso de uso:</strong> Un gerente de marketing crea una app para generar copy publicitario personalizado sin escribir código.
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CEDRIC -->
+    <div id="cedric" class="tab-section">
+      <div class="section-header amazon">
+        <h2>💬 Cedric</h2>
+        <p>Chatbot interno de Amazon para empleados - El futuro de la comunicación empresarial</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🔐 ¿Qué es Cedric?</h3>
+        <p>Cedric es el chatbot interno de Amazon, diseñado como una alternativa segura a ChatGPT para uso empresarial. Basado en Amazon Bedrock y modelos Claude, opera completamente dentro de la infraestructura de Amazon, garantizando que ningún dato sensible o propiedad intelectual salga de la empresa. Representa un modelo pionero de cómo las grandes corporaciones pueden implementar IA generativa manteniendo control total sobre sus datos.</p>
+      </div>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://console.harmony.a2z.com/internal-ai-assistant" target="_blank" class="access-button">
+          Acceder a Cedric (Interno Amazon)
+        </a>
+      </div>
+      <div class="chart-container">
+        <h3 style="text-align: center; color: var(--amazon-blue); margin-bottom: 24px;">📈 Impacto de Cedric en Amazon</h3>
+        <canvas id="cedricChart"></canvas>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🔒 Seguridad Empresarial</h3>
+          <p>Cedric opera completamente dentro de la infraestructura de Amazon, garantizando que ningún dato sensible o propiedad intelectual salga de la empresa. Utiliza Amazon Bedrock con modelos Claude para procesamiento seguro.</p>
+        </div>
+        <div class="info-card">
+          <h3>⚡ Productividad Mejorada</h3>
+          <p>Los empleados reportan un 35% de aumento en productividad al usar Cedric para tareas como resúmenes de documentos, brainstorming y consultas sobre políticas internas.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔧 Extensibilidad</h3>
+          <p>Cedric se puede extender con "custom skills" desarrollados internamente usando AWS Lambda, permitiendo integraciones específicas con sistemas internos de Amazon.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card amazon">
+          <h3 class="card-title amazon">🎯 Funcionalidades Principales</h3>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>📋 Q&A sobre políticas:</strong> Responde preguntas sobre procedimientos internos</li>
+            <li><strong>📄 Resúmenes de documentos:</strong> Extrae puntos clave de reportes largos</li>
+            <li><strong>💡 Brainstorming:</strong> Genera ideas para proyectos y soluciones</li>
+            <li><strong>🔍 Búsqueda inteligente:</strong> Encuentra información en sistemas internos</li>
+            <li><strong>📊 Análisis de datos:</strong> Interpreta métricas y KPIs</li>
+            <li><strong>✍️ Redacción asistida:</strong> Ayuda con emails y documentos</li>
+          </ul>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🏗️ Arquitectura Técnica</h3>
+          <div style="background: #fff8f0; padding: 20px; border-radius: 12px; margin: 16px 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: center;">
+              <div>
+                <strong>🔧 Backend</strong><br>
+                Amazon Bedrock<br>
+                Claude Models<br>
+                AWS Lambda
+              </div>
+              <div>
+                <strong>💻 Frontend</strong><br>
+                Slack Integration<br>
+                Web Portal<br>
+                Mobile App
+              </div>
+            </div>
+          </div>
+          <p><strong>Flujo de datos:</strong> Usuario → Slack/Portal → API Gateway → Lambda → Bedrock → Claude → Respuesta</p>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">📊 Métricas de Adopción</h3>
+          <div class="dashboard-metrics" style="margin: 20px 0;">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">85%</div>
+              <div class="metric-label">Adopción empleados</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">2.3M</div>
+              <div class="metric-label">Consultas/mes</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">35%</div>
+              <div class="metric-label">↑ Productividad</div>
+            </div>
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🌟 ¿Por qué es Relevante?</h3>
+          <div class="ventajas">
+            <h4>Ventajas Estratégicas</h4>
+            <ul>
+              <li style="--i: 0">Evita filtraciones de IP y datos sensibles</li>
+              <li style="--i: 1">Reduce dependencia de proveedores externos</li>
+              <li style="--i: 2">Modelo replicable para otras empresas</li>
+              <li style="--i: 3">Control total sobre datos y procesamiento</li>
+              <li style="--i: 4">Cumplimiento regulatorio garantizado</li>
+            </ul>
+          </div>
+          <div style="background: #e8f5e8; padding: 16px; border-radius: 12px; margin-top: 16px;">
+            <strong>🎯 Lección clave:</strong> Cedric demuestra que las empresas pueden crear chatbots internos potentes sin comprometer la seguridad de sus datos.
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PARTYROCK -->
+    <div id="partyrock" class="tab-section">
+      <div class="section-header amazon">
+        <h2>🎉 PartyRock</h2>
+        <p>Playground público para construir mini-apps generativas sin código</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🎨 ¿Qué es PartyRock?</h3>
+        <p>PartyRock es un playground público de Amazon que permite a cualquier persona crear aplicaciones generativas sin necesidad de conocimientos técnicos o cuenta AWS. Utilizando una interfaz visual de arrastrar y soltar, los usuarios pueden encadenar diferentes modelos de IA para crear flujos complejos de procesamiento. Es una herramienta educativa y de prototipado que democratiza el acceso a la IA generativa.</p>
+      </div>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://internal.partyrock.aws.dev/home" target="_blank" class="access-button">
+          Acceder a PartyRock
+        </a>
+      </div>
+      <div class="chart-container">
+        <h3 style="text-align: center; color: var(--amazon-blue); margin-bottom: 24px;">🎨 Tipos de Apps Creadas en PartyRock</h3>
+        <canvas id="partyrockChart"></canvas>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🎯 Sin Barreras de Entrada</h3>
+          <p>PartyRock no requiere cuenta AWS ni conocimientos técnicos. Cualquier persona puede crear aplicaciones generativas arrastrando y soltando componentes visuales.</p>
+        </div>
+        <div class="info-card">
+          <h3>🔗 Encadenamiento Visual</h3>
+          <p>Conecta diferentes modelos de IA (texto, imagen, audio) de forma visual para crear flujos complejos de procesamiento de información.</p>
+        </div>
+        <div class="info-card">
+          <h3>💰 Créditos Gratuitos</h3>
+          <p>Incluye créditos mensuales gratuitos para experimentar con diferentes modelos de Amazon Bedrock sin costo inicial.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card amazon">
+          <h3 class="card-title amazon">🛠️ Características Principales</h3>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>🎨 Editor visual:</strong> Arrastra y suelta componentes</li>
+            <li><strong>🔗 Encadenamiento:</strong> Conecta prompts y modelos</li>
+            <li><strong>🌐 Compartir fácil:</strong> Publica con un enlace</li>
+            <li><strong>💎 Créditos gratuitos:</strong> Experimenta sin costo</li>
+            <li><strong>📱 Responsive:</strong> Funciona en móviles</li>
+            <li><strong>🎭 Múltiples modelos:</strong> Texto, imagen, audio</li>
+          </ul>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🎵 Casos de Uso Populares</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;">
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>🎵 Generador de Playlists</strong><br>
+              <small>Crea listas de reproducción personalizadas basadas en estado de ánimo y género musical</small>
+            </div>
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>📚 Story-teller</strong><br>
+              <small>Genera historias interactivas con imágenes IA generadas</small>
+            </div>
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>🤖 Chatbots Temáticos</strong><br>
+              <small>Asistentes especializados en cocina, fitness, viajes</small>
+            </div>
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>🎨 Generador de Contenido</strong><br>
+              <small>Crea posts para redes sociales con texto e imágenes</small>
+            </div>
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">📈 Estadísticas de Uso</h3>
+          <div class="dashboard-metrics" style="margin: 20px 0;">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">500K+</div>
+              <div class="metric-label">Apps creadas</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">2M+</div>
+              <div class="metric-label">Usuarios activos</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">15min</div>
+              <div class="metric-label">Tiempo promedio creación</div>
+            </div>
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🚀 Ventajas Competitivas</h3>
+          <div class="ventajas">
+            <h4>Fortalezas</h4>
+            <ul>
+              <li style="--i: 0">No requiere conocimientos técnicos</li>
+              <li style="--i: 1">Acceso gratuito sin cuenta AWS</li>
+              <li style="--i: 2">Integración nativa con Bedrock</li>
+              <li style="--i: 3">Comunidad activa de creadores</li>
+              <li style="--i: 4">Plantillas pre-construidas</li>
+            </ul>
+          </div>
+          <div class="desventajas">
+            <h4>Limitaciones</h4>
+            <ul>
+              <li style="--i: 0">Funcionalidades limitadas vs desarrollo custom</li>
+              <li style="--i: 1">Dependiente del ecosistema AWS</li>
+              <li style="--i: 2">Créditos limitados en plan gratuito</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="demo-container">
+        <h3>🎮 Demo Interactivo de PartyRock App Builder</h3>
+        <div class="partyrock-demo">
+          <div class="demo-header">
+            <h4 class="demo-title">🎨 Editor Visual PartyRock</h4>
+            <div class="demo-controls">
+              <button class="demo-btn primary" onclick="runDemo()">▶️ Ejecutar</button>
+              <button class="demo-btn secondary" onclick="clearDemo()">🗑️ Limpiar</button>
+              <button class="demo-btn secondary" onclick="saveDemo()">💾 Guardar</button>
+            </div>
+          </div>
+          <div class="demo-workspace">
+            <div class="demo-sidebar">
+              <h4>🧩 Componentes</h4>
+              <div class="component-item" draggable="true" data-component="text-input">📝 Entrada de Texto</div>
+              <div class="component-item" draggable="true" data-component="ai-generator">🤖 Generador IA</div>
+              <div class="component-item" draggable="true" data-component="image-gen">🎨 Generador Imagen</div>
+              <div class="component-item" draggable="true" data-component="output">📤 Salida</div>
+            </div>
+            <div class="demo-canvas" id="demoCanvas">
+              <div class="canvas-placeholder">
+                🎯 Arrastra componentes aquí para crear tu app<br>
+                <small>Ejemplo: Entrada de Texto → Generador IA → Salida</small>
+              </div>
+            </div>
+          </div>
+          <div class="demo-output" id="demoOutput" style="display: none;">
+            <div class="output-title">🚀 Resultado de la App:</div>
+            <div class="output-content" id="outputContent">
+              Esperando ejecución...
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 16px; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+          <strong>💡 Prueba el demo:</strong> Arrastra los componentes al canvas y haz clic en "Ejecutar" para ver cómo funciona PartyRock
+        </p>
+        <p style="margin-top: 8px; color: rgba(255,255,255,0.9); font-size: 0.9em;">
+          <strong>🌐 Visita:</strong> <a href="https://partyrock.aws" target="_blank" style="color: white; text-decoration: underline;">partyrock.aws</a> para probar el editor real
+        </p>
+      </div>
+    </div>
+    <!-- SAPIEN -->
+    <div id="sapien" class="tab-section">
+      <div class="section-header amazon">
+        <h2>🧠 Sapien</h2>
+        <p>Plataforma de IA de Amazon para análisis avanzado de datos y insights empresariales</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🔬 ¿Qué es Sapien?</h3>
+        <p>Sapien es una plataforma avanzada de inteligencia artificial desarrollada por Amazon para análisis profundo de datos empresariales y generación de insights estratégicos. Diseñada para científicos de datos y analistas, combina machine learning, procesamiento de lenguaje natural y visualización de datos para transformar información compleja en decisiones accionables. Sapien se integra nativamente con el ecosistema AWS y utiliza modelos de IA propietarios optimizados para análisis empresarial.</p>
+      </div>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://prod.na.sapien.rbs.amazon.dev/" target="_blank" class="access-button">
+          Acceder a Sapien (Interno Amazon)
+        </a>
+      </div>
+      <div class="chart-container">
+        <h3 style="text-align: center; color: var(--amazon-blue); margin-bottom: 24px;">📊 Capacidades de Sapien</h3>
+        <canvas id="sapienChart"></canvas>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>📈 Análisis Predictivo</h3>
+          <p>Sapien utiliza algoritmos avanzados de machine learning para predecir tendencias, identificar patrones ocultos y generar forecasts precisos basados en datos históricos y en tiempo real.</p>
+        </div>
+        <div class="info-card">
+          <h3>🤖 Automatización Inteligente</h3>
+          <p>Automatiza procesos de análisis complejos, desde la limpieza de datos hasta la generación de reportes, reduciendo el tiempo de análisis de semanas a minutos.</p>
+        </div>
+        <div class="info-card">
+          <h3>🎯 Insights Accionables</h3>
+          <p>Convierte datos complejos en recomendaciones claras y accionables, priorizando insights por impacto potencial y facilidad de implementación.</p>
+        </div>
+      </div>
+      <div class="card-grid">
+        <div class="card amazon">
+          <h3 class="card-title amazon">🛠️ Funcionalidades Principales</h3>
+          <ul style="margin: 16px 0; padding-left: 20px;">
+            <li><strong>📊 Análisis multidimensional:</strong> Procesa datos de múltiples fuentes simultáneamente</li>
+            <li><strong>🔍 Detección de anomalías:</strong> Identifica patrones inusuales automáticamente</li>
+            <li><strong>📈 Modelado predictivo:</strong> Crea modelos de forecasting personalizados</li>
+            <li><strong>💬 Consultas en lenguaje natural:</strong> Pregunta en español y obtén análisis</li>
+            <li><strong>📋 Reportes automatizados:</strong> Genera informes ejecutivos automáticamente</li>
+            <li><strong>🔗 Integración AWS:</strong> Conecta con S3, Redshift, RDS y más</li>
+          </ul>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🎯 Casos de Uso Empresariales</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;">
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>📊 Análisis de Ventas</strong><br>
+              <small>Identifica tendencias de ventas, productos estrella y oportunidades de crecimiento</small>
+            </div>
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>👥 Comportamiento del Cliente</strong><br>
+              <small>Analiza patrones de compra y segmenta clientes para marketing personalizado</small>
+            </div>
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>⚙️ Optimización Operacional</strong><br>
+              <small>Mejora eficiencia de procesos y reduce costos operativos</small>
+            </div>
+            <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+              <strong>🔮 Forecasting Financiero</strong><br>
+              <small>Predice ingresos, gastos y flujo de caja con alta precisión</small>
+            </div>
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">📈 Métricas de Rendimiento</h3>
+          <div class="dashboard-metrics" style="margin: 20px 0;">
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">95%</div>
+              <div class="metric-label">Precisión predictiva</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">80%</div>
+              <div class="metric-label">Reducción tiempo análisis</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-value" style="color: var(--amazon-orange);">50+</div>
+              <div class="metric-label">Fuentes de datos</div>
+            </div>
+          </div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🏗️ Arquitectura y Tecnología</h3>
+          <div style="background: #fff8f0; padding: 20px; border-radius: 12px; margin: 16px 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: center;">
+              <div>
+                <strong>🧠 IA/ML</strong><br>
+                Amazon SageMaker<br>
+                Modelos Propietarios<br>
+                AutoML
+              </div>
+              <div>
+                <strong>💾 Datos</strong><br>
+                Amazon Redshift<br>
+                S3 Data Lake<br>
+                Real-time Streaming
+              </div>
+            </div>
+          </div>
+          <div class="ventajas">
+            <h4>Ventajas Técnicas</h4>
+            <ul>
+              <li style="--i: 0">Procesamiento en tiempo real de petabytes</li>
+              <li style="--i: 1">Modelos de IA pre-entrenados específicos para retail</li>
+              <li style="--i: 2">Escalabilidad automática según demanda</li>
+              <li style="--i: 3">Seguridad de nivel empresa</li>
+              <li style="--i: 4">API REST para integraciones custom</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ¿CUÁL USO? -->
+    <div id="cual-uso" class="tab-section">
+      <div class="section-header amazon">
+        <h2>🤔 ¿Cuál Herramienta de Amazon Usar?</h2>
+        <p>Guía completa para elegir la herramienta de IA de Amazon según tu necesidad</p>
+      </div>
+      <div class="info-text amazon">
+        <h3>🎯 Toma la Decisión Correcta</h3>
+        <p>Amazon ofrece múltiples herramientas de IA, cada una optimizada para casos de uso específicos. Esta guía te ayudará a identificar cuál es la mejor opción según tu rol, objetivos y nivel técnico. Desde desarrollo de código hasta análisis de datos, cada herramienta tiene sus fortalezas únicas.</p>
+      </div>
+      <div class="comparison-table">
+        <h3 style="text-align: center; color: var(--amazon-blue); margin-bottom: 30px;">📊 Matriz de Decisión por Escenario</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Escenario de Uso</th>
+              <th>Amazon Q</th>
+              <th>Cedric</th>
+              <th>PartyRock</th>
+              <th>Sapien</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="scenario">👨‍💻 Desarrollo de Software</td>
+              <td><span class="best-choice">IDEAL</span></td>
+              <td><span class="good-choice">Bueno</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="not-ideal">No</span></td>
+            </tr>
+            <tr>
+              <td class="scenario">📋 Consultas Empresariales</td>
+              <td><span class="good-choice">Bueno</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="not-ideal">No</span></td>
+            </tr>
+            <tr>
+              <td class="scenario">🎨 Prototipado Rápido</td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+              <td><span class="not-ideal">No</span></td>
+            </tr>
+            <tr>
+              <td class="scenario">📊 Análisis de Datos</td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="good-choice">Bueno</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+            </tr>
+            <tr>
+              <td class="scenario">🏢 Uso Interno Empresa</td>
+              <td><span class="good-choice">Bueno</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+            </tr>
+            <tr>
+              <td class="scenario">🎓 Aprendizaje/Educación</td>
+              <td><span class="good-choice">Bueno</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+              <td><span class="not-ideal">No</span></td>
+            </tr>
+            <tr>
+              <td class="scenario">🔒 Máxima Seguridad</td>
+              <td><span class="good-choice">Bueno</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+            </tr>
+            <tr>
+              <td class="scenario">💰 Presupuesto Limitado</td>
+              <td><span class="good-choice">Bueno</span></td>
+              <td><span class="not-ideal">No</span></td>
+              <td><span class="best-choice">IDEAL</span></td>
+              <td><span class="not-ideal">No</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card-grid">
+        <div class="card amazon">
+          <h3 class="card-title amazon">👨‍💻 Para Desarrolladores</h3>
+          <div style="background: #e8f5e8; padding: 20px; border-radius: 12px; margin: 16px 0;">
+            <h4 style="color: #2e7d32; margin-top: 0;">🏆 Recomendación: Amazon Q Developer</h4>
+            <p><strong>¿Por qué?</strong> Específicamente diseñado para acelerar el desarrollo de software con generación de código, tests automáticos y debugging inteligente.</p>
+          </div>
+          <div><strong>🎯 Casos ideales:</strong></div>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Generación de código boilerplate</li>
+            <li>Creación de tests unitarios</li>
+            <li>Migración de código legacy</li>
+            <li>Documentación automática</li>
+          </ul>
+          <div><strong>💡 Alternativa:</strong> Cedric para consultas sobre arquitectura y mejores prácticas</div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">💼 Para Empleados Corporativos</h3>
+          <div style="background: #e8f5e8; padding: 20px; border-radius: 12px; margin: 16px 0;">
+            <h4 style="color: #2e7d32; margin-top: 0;">🏆 Recomendación: Cedric</h4>
+            <p><strong>¿Por qué?</strong> Acceso seguro a información interna, políticas corporativas y asistencia en tareas administrativas sin riesgo de filtración de datos.</p>
+          </div>
+          <div><strong>🎯 Casos ideales:</strong></div>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Consultas sobre políticas internas</li>
+            <li>Resúmenes de documentos largos</li>
+            <li>Brainstorming de proyectos</li>
+            <li>Redacción de emails profesionales</li>
+          </ul>
+          <div><strong>💡 Alternativa:</strong> Amazon Q Business para búsquedas en documentos</div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">🎨 Para Creativos y Educadores</h3>
+          <div style="background: #e8f5e8; padding: 20px; border-radius: 12px; margin: 16px 0;">
+            <h4 style="color: #2e7d32; margin-top: 0;">🏆 Recomendación: PartyRock</h4>
+            <p><strong>¿Por qué?</strong> Interfaz visual intuitiva, sin necesidad de conocimientos técnicos, ideal para experimentar y crear prototipos rápidamente.</p>
+          </div>
+          <div><strong>🎯 Casos ideales:</strong></div>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Creación de chatbots temáticos</li>
+            <li>Generadores de contenido creativo</li>
+            <li>Herramientas educativas interactivas</li>
+            <li>Prototipado de ideas innovadoras</li>
+          </ul>
+          <div><strong>💡 Ventaja:</strong> Completamente gratuito para empezar</div>
+        </div>
+        <div class="card amazon">
+          <h3 class="card-title amazon">📊 Para Analistas de Datos</h3>
+          <div style="background: #e8f5e8; padding: 20px; border-radius: 12px; margin: 16px 0;">
+            <h4 style="color: #2e7d32; margin-top: 0;">🏆 Recomendación: Sapien</h4>
+            <p><strong>¿Por qué?</strong> Plataforma especializada en análisis avanzado de datos con capacidades predictivas y procesamiento de grandes volúmenes de información.</p>
+          </div>
+          <div><strong>🎯 Casos ideales:</strong></div>
+          <ul style="margin: 8px 0; padding-left: 20px;">
+            <li>Análisis predictivo de ventas</li>
+            <li>Segmentación de clientes</li>
+            <li>Detección de anomalías</li>
+            <li>Forecasting financiero</li>
+          </ul>
+          <div><strong>💡 Alternativa:</strong> Cedric para consultas sobre interpretación de datos</div>
+        </div>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🚀 Combinaciones Poderosas</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">🔄 <strong>Q Developer + Cedric:</strong> Desarrollo con consultas arquitectónicas</li>
+            <li style="margin-bottom: 12px;">📊 <strong>Sapien + Cedric:</strong> Análisis de datos con contexto empresarial</li>
+            <li style="margin-bottom: 12px;">🎨 <strong>PartyRock + Q Apps:</strong> Prototipo rápido a producción</li>
+            <li style="margin-bottom: 12px;">💼 <strong>Q Business + Sapien:</strong> Búsqueda inteligente con análisis profundo</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>⚠️ Consideraciones Importantes</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">🔒 <strong>Datos sensibles:</strong> Usa solo Cedric o Sapien</li>
+            <li style="margin-bottom: 12px;">💰 <strong>Presupuesto limitado:</strong> Comienza con PartyRock</li>
+            <li style="margin-bottom: 12px;">⏱️ <strong>Necesidad urgente:</strong> Q Developer para código, Cedric para consultas</li>
+            <li style="margin-bottom: 12px;">🎓 <strong>Aprendizaje:</strong> PartyRock es ideal para experimentar</li>
+          </ul>
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #fff8f0, #ffffff); padding: 30px; border-radius: 20px; border-left: 6px solid var(--amazon-orange); margin: 40px 0;">
+        <h3 style="color: var(--amazon-blue); margin-top: 0;">🎯 Recomendación Final</h3>
+        <p style="font-size: 1.1em; line-height: 1.8;">
+          <strong>Para la mayoría de usuarios:</strong> Comienza con <strong>PartyRock</strong> para experimentar y entender las capacidades de la IA generativa. Una vez familiarizado, migra a <strong>Amazon Q</strong> para desarrollo o <strong>Cedric</strong> para uso empresarial según tus necesidades específicas.
+        </p>
+        <p style="font-size: 1.05em; color: var(--amazon-blue); margin-bottom: 0;">
+          💡 <strong>Tip profesional:</strong> Todas estas herramientas se complementan entre sí. No es una decisión excluyente - puedes usar múltiples herramientas según el contexto y la tarea específica.
+        </p>
+      </div>
+    </div>
+    <!-- FRAMEWORKS -->
+    <div id="frameworks" class="tab-section">
+      <div class="section-header">
+        <h2>⚙️ Frameworks para Desarrollo de Agentes</h2>
+        <p>Compara las principales herramientas para construir agentes de IA</p>
+      </div>
+      <div class="info-text">
+        <h3>🔧 ¿Qué es un Framework?</h3>
+        <p>Un framework es una estructura o conjunto de herramientas, reglas y componentes predefinidos que sirve como base para desarrollar software, aplicaciones web, apps móviles u otros proyectos tecnológicos. En otras palabras, es como una plantilla avanzada que proporciona a los programadores una arquitectura y funcionalidades básicas ya listas, para que puedan centrarse en las partes específicas de su aplicación sin tener que construir todo desde cero.</p>
+      </div>
+      <div class="chart-container">
+        <h3 style="text-align: center; color: var(--main-dark); margin-bottom: 24px;">📊 Comparativa de Frameworks</h3>
+        <canvas id="frameworksChart"></canvas>
+      </div>
+      <div id="frameworksCards"></div>
+    </div>
+    <!-- INDUSTRIAS -->
+    <div id="industrias" class="tab-section">
+      <div class="section-header">
+        <h2>🏭 Casos de Uso por Industria</h2>
+        <p>Descubre cómo los agentes de IA están transformando diferentes sectores</p>
+      </div>
+      <div class="info-text">
+        <h3>🌍 Transformación Industrial</h3>
+        <p>Los agentes de IA están revolucionando prácticamente todas las industrias, desde la automatización de procesos en tecnología hasta la personalización de experiencias en retail. Cada sector presenta oportunidades únicas para implementar soluciones de IA que mejoren la eficiencia, reduzcan costos y generen nuevas fuentes de valor. El retorno de inversión varía según la industria, pero todas muestran un potencial significativo de crecimiento.</p>
+      </div>
+      <div class="roi-calc">
+        <h3>💰 Calculadora de ROI</h3>
+        <label>Selecciona industria:</label>
+        <select id="roiIndustry">
+          <option value="Tecnología">🖥️ Tecnología</option>
+          <option value="Marketing">📢 Marketing</option>
+          <option value="Retail/E-commerce">🛒 Retail/E-commerce</option>
+          <option value="Servicios Financieros">💳 Servicios Financieros</option>
+        </select>
+        <label>Inversión estimada (€):</label>
+        <input type="number" id="roiInput" placeholder="Ejemplo: 10000" min="1"/>
+        <button onclick="calcularROI()">🧮 Calcular ROI</button>
+        <div id="roiResult" class="roi-result" style="display: none;"></div>
+      </div>
+      <div class="chart-container">
+        <h3 style="text-align: center; color: var(--main-dark); margin-bottom: 24px;">📈 ROI por Industria</h3>
+        <canvas id="roiChart"></canvas>
+      </div>
+      <div id="industryCards" class="card-grid"></div>
+    </div>
+    <!-- MÉTRICAS -->
+    <div id="metricas" class="tab-section">
+      <div class="section-header">
+        <h2>📊 Métricas de Evaluación</h2>
+        <p>Comprende cómo medir el rendimiento de tus agentes de IA</p>
+      </div>
+      <div class="info-text">
+        <h3>📏 Importancia de las Métricas</h3>
+        <p>Medir el rendimiento de los agentes de IA es crucial para garantizar su efectividad y optimizar su funcionamiento. Las métricas clave incluyen precisión (qué tan correctas son las respuestas), tiempo de respuesta (velocidad de procesamiento) y satisfacción del usuario (experiencia general). Estas métricas trabajan en conjunto para proporcionar una visión holística del rendimiento del sistema y identificar áreas de mejora.</p>
+      </div>
+      <div class="slider-container">
+        <h3 style="text-align: center; color: var(--main-dark); margin-bottom: 24px;">🎛️ Evaluador de Métricas Interactivo</h3>
+        <p style="text-align: center; color: var(--main-muted); margin-bottom: 32px;">Simula diferentes escenarios para entender el impacto de cada métrica</p>
+        <div class="slider-row">
+          <label>🎯 Precisión (%): <span id="precisionValue">95</span></label>
+          <input type="range" min="70" max="100" value="95" step="1" id="precisionSlider" class="slider">
+        </div>
+        <div class="slider-row">
+          <label>⚡ Tiempo de respuesta (ms): <span id="tiempoValue">300</span></label>
+          <input type="range" min="100" max="1000" value="300" step="10" id="tiempoSlider" class="slider">
+        </div>
+        <div class="slider-row">
+          <label>😊 Satisfacción del usuario (/5): <span id="satisfaccionValue">4.5</span></label>
+          <input type="range" min="3" max="5" value="4.5" step="0.1" id="satisfaccionSlider" class="slider">
+        </div>
+        <div class="score-display">
+          <div>🏆 Puntuación General: <span id="puntuacionGeneral">87</span>/100</div>
+        </div>
+      </div>
+    </div>
+    <!-- TENDENCIAS -->
+    <div id="tendencias" class="tab-section">
+      <div class="section-header">
+        <h2>📈 Tendencias del Mercado</h2>
+        <p>Analiza el crecimiento y las perspectivas futuras de los agentes de IA</p>
+      </div>
+      <div class="info-text">
+        <h3>🚀 El Futuro de los Agentes de IA</h3>
+        <p>El mercado de agentes de IA está experimentando un crecimiento exponencial sin precedentes. Con una tasa de crecimiento anual compuesta (CAGR) del 45.82%, se espera que el mercado pase de $5.43 billones en 2024 a $236 billones en 2034. Este crecimiento está impulsado por la adopción masiva en empresas, el desarrollo de sistemas multi-agente más sofisticados y la integración con tecnologías emergentes como IoT y edge computing.</p>
+      </div>
+      <div class="dashboard-metrics" style="margin-bottom: 40px;">
+        <div class="metric-card">
+          <div class="metric-value">$5.43B</div>
+          <div class="metric-label">💼 Mercado actual (2024)</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">$236B</div>
+          <div class="metric-label">🚀 Proyección 2034</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value">45.82%</div>
+          <div class="metric-label">📊 CAGR</div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <h3 style="text-align: center; color: var(--main-dark); margin-bottom: 24px;">📈 Crecimiento del Mercado (CAGR 45.82%)</h3>
+        <canvas id="tendenciasChart"></canvas>
+      </div>
+      <div class="info-cards">
+        <div class="info-card">
+          <h3>🔑 Tendencias Clave</h3>
+          <ul id="tendenciasClavesList" style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">🏢 Adopción masiva en empresas</li>
+            <li style="margin-bottom: 12px;">🤝 Sistemas multi-agente colaborativos</li>
+            <li style="margin-bottom: 12px;">🎯 Agentes especializados por dominio</li>
+            <li style="margin-bottom: 12px;">🌐 Integración con IoT y edge computing</li>
+            <li style="margin-bottom: 12px;">⚖️ Regulaciones y governance más estrictas</li>
+            <li style="margin-bottom: 12px;">🧠 Agentes con memoria a largo plazo</li>
+            <li style="margin-bottom: 12px;">🎭 Procesamiento multimodal avanzado</li>
+          </ul>
+        </div>
+        <div class="info-card">
+          <h3>🎯 Impacto Esperado</h3>
+          <p style="margin-bottom: 16px;">El crecimiento exponencial de los agentes de IA transformará:</p>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 12px;">⚙️ Procesos empresariales automatizados</li>
+            <li style="margin-bottom: 12px;">👤 Experiencias de usuario personalizadas</li>
+            <li style="margin-bottom: 12px;">📊 Toma de decisiones basada en datos</li>
+            <li style="margin-bottom: 12px;">🔧 Optimización de recursos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <h3>🚀 Dashboard de Agentes de IA</h3>
+      <p>Una exploración completa del fascinante mundo de la inteligencia artificial y sus aplicaciones en el mundo real. Desde conceptos básicos hasta implementaciones avanzadas.</p>
+      <div class="footer-signature">
+        ✨ Creado con pasión por <span class="author">mherrad</span> ✨
+        <br>
+        <small style="opacity: 0.8; margin-top: 10px; display: block;">
+          © 2024 - Diseñado para inspirar y educar sobre el futuro de la IA
+        </small>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // Variables globales para el demo de pensamiento
+    let currentAgentType = 'reflejo';
+    let currentScenario = 'navegacion';
+    let isThinking = false;
+    // Variables globales para el demo de PartyRock
+    let droppedComponents = [];
+    let draggedComponent = null;
+    // Datos de la aplicación
+    const appData = {
+      tiposAgentes: [
+        {
+          nombre: "Agente Reflejo Simple",
+          complejidad: "Baja",
+          autonomia: "Mínima",
+          memoria: false,
+          casoUso: "Termostatos, sensores simples",
+          descripcion: "Responde directamente a estímulos del entorno sin memoria de estados anteriores",
+          ventajas: ["Rápido", "Simple", "Confiable"],
+          desventajas: ["Sin memoria", "Limitado", "No adaptativo"]
+        },
+        {
+          nombre: "Agente Reflejo Basado en Modelo",
+          complejidad: "Media",
+          autonomia: "Baja",
+          memoria: true,
+          casoUso: "Robots de limpieza, sistemas de navegación",
+          descripcion: "Mantiene un modelo interno del mundo para tomar mejores decisiones",
+          ventajas: ["Memoria de estado", "Mejor navegación", "Más flexible"],
+          desventajas: ["Más complejo", "Mayor costo computacional", "Requiere modelado"]
+        },
+        {
+          nombre: "Agente Basado en Objetivos",
+          complejidad: "Media",
+          autonomia: "Media",
+          memoria: true,
+          casoUso: "Planificación de rutas, sistemas de recomendación",
+          descripcion: "Planifica acciones para alcanzar objetivos específicos",
+          ventajas: ["Orientado a objetivos", "Planificación", "Flexible"],
+          desventajas: ["Requiere definición clara de objetivos", "Computacionalmente intensivo", "Puede ser lento"]
+        },
+        {
+          nombre: "Agente Basado en Utilidad",
+          complejidad: "Alta",
+          autonomia: "Alta",
+          memoria: true,
+          casoUso: "Sistemas financieros, optimización de recursos",
+          descripcion: "Optimiza sus acciones basándose en una función de utilidad",
+          ventajas: ["Optimización", "Manejo de trade-offs", "Decisiones informadas"],
+          desventajas: ["Complejo", "Requiere función de utilidad bien definida", "Computacionalmente costoso"]
+        },
+        {
+          nombre: "Agente de Aprendizaje",
+          complejidad: "Muy Alta",
+          autonomia: "Muy Alta",
+          memoria: true,
+          casoUso: "Asistentes personales, sistemas adaptativos",
+          descripcion: "Aprende y mejora su comportamiento basándose en la experiencia",
+          ventajas: ["Adaptativo", "Mejora continua", "Aprendizaje automático"],
+          desventajas: ["Muy complejo", "Requiere grandes datasets", "Impredecible durante aprendizaje"]
+        }
+      ],
+      frameworks: [
+        {
+          nombre: "LangChain",
+          tipo: "Propósito General",
+          facilidadUso: 7,
+          flexibilidad: 9,
+          soporteEmpresarial: 8,
+          comunidad: 10,
+          documentacion: 9,
+          descripcion: "Framework más popular para construir aplicaciones con LLMs",
+          ventajas: ["Gran ecosistema", "Excelente documentación", "Comunidad activa"],
+          desventajas: ["Curva de aprendizaje", "Puede ser excesivo para proyectos simples"]
+        },
+        {
+          nombre: "AutoGen",
+          tipo: "Multi-Agente",
+          facilidadUso: 6,
+          flexibilidad: 8,
+          soporteEmpresarial: 7,
+          comunidad: 8,
+          documentacion: 7,
+          descripcion: "Framework de Microsoft para sistemas multi-agente",
+          ventajas: ["Conversaciones multi-agente", "Soporte de Microsoft", "Flexible"],
+          desventajas: ["Menos maduro", "Documentación limitada", "Curva de aprendizaje empinada"]
+        },
+        {
+          nombre: "CrewAI",
+          tipo: "Colaborativo",
+          facilidadUso: 9,
+          flexibilidad: 7,
+          soporteEmpresarial: 6,
+          comunidad: 7,
+          documentacion: 8,
+          descripcion: "Framework simple para agentes colaborativos",
+          ventajas: ["Muy fácil de usar", "Setup rápido", "Buena para prototipos"],
+          desventajas: ["Menos flexible", "Comunidad pequeña", "Funcionalidades limitadas"]
+        },
+        {
+          nombre: "Semantic Kernel",
+          tipo: "Empresarial",
+          facilidadUso: 7,
+          flexibilidad: 8,
+          soporteEmpresarial: 9,
+          comunidad: 6,
+          documentacion: 8,
+          descripcion: "Framework de Microsoft para aplicaciones empresariales",
+          ventajas: ["Orientado a empresa", "Seguridad robusta", "Integración con Azure"],
+          desventajas: ["Ecosistema limitado", "Menos community-driven", "Enfocado en Microsoft"]
+        }
+      ],
+      industrias: [
+        {
+          nombre: "Tecnología",
+          roi: "5-10x",
+          complejidad: "Media",
+          casosUso: [
+            "Desarrollo de código automatizado",
+            "Testing y QA automático",
+            "Gestión de infraestructura",
+            "Análisis de logs y debugging",
+            "Optimización de performance"
+          ],
+          ejemplos: [
+            "GitHub Copilot para programación",
+            "Sistemas de CI/CD inteligentes",
+            "Monitoreo predictivo de sistemas"
+          ]
+        },
+        {
+          nombre: "Marketing",
+          roi: "4-8x",
+          complejidad: "Media",
+          casosUso: [
+            "Análisis de audiencia automatizado",
+            "Generación de contenido personalizado",
+            "Optimización de campañas en tiempo real",
+            "Segmentación inteligente de clientes",
+            "Análisis de sentiment en redes sociales"
+          ],
+          ejemplos: [
+            "Jasper AI para contenido",
+            "Sistemas de email marketing inteligente",
+            "Optimización automática de anuncios"
+          ]
+        },
+        {
+          nombre: "Retail/E-commerce",
+          roi: "4-7x",
+          complejidad: "Media",
+          casosUso: [
+            "Recomendaciones personalizadas de productos",
+            "Gestión inteligente de inventario",
+            "Soporte al cliente 24/7",
+            "Análisis predictivo de demanda",
+            "Optimización de precios dinámicos"
+          ],
+          ejemplos: [
+            "Amazon recommendation engine",
+            "Chatbots de atención al cliente",
+            "Sistemas de predicción de inventario"
+          ]
+        },
+        {
+          nombre: "Servicios Financieros",
+          roi: "3-6x",
+          complejidad: "Alta",
+          casosUso: [
+            "Análisis de riesgo crediticio",
+            "Trading algorítmico automatizado",
+            "Detección de fraude en tiempo real",
+            "Atención al cliente personalizada",
+            "Cumplimiento normativo automatizado"
+          ],
+          ejemplos: [
+            "Sistemas de scoring crediticio",
+            "Bots de trading automatizado",
+            "Sistemas anti-fraude"
+          ]
+        }
+      ]
+    };
+    // Datos para simulación de pensamiento
+    const thinkingData = {
+      reflejo: {
+        navegacion: {
+          thoughts: [
+            "🔍 Detectando obstáculo frontal",
+            "⚠️ Activando sensor de proximidad",
+            "🔄 Ejecutando regla: SI obstáculo ENTONCES girar",
+            "➡️ Girando 90° a la derecha"
+          ],
+          steps: [
+            {
+              icon: "👁️",
+              title: "Percepción",
+              content: "Sensores detectan obstáculo a 30cm de distancia",
+              confidence: 95
+            },
+            {
+              icon: "⚡",
+              title: "Reacción",
+              content: "Activación inmediata de regla predefinida",
+              confidence: 100
+            },
+            {
+              icon: "🎯",
+              title: "Acción",
+              content: "Ejecutar movimiento de evasión",
+              confidence: 90
+            }
+          ],
+          decision: "Girar a la derecha para evitar obstáculo"
+        },
+        recomendacion: {
+          thoughts: [
+            "📊 Usuario vio producto X",
+            "🔍 Buscando regla de recomendación",
+            "📋 Regla encontrada: X → Y",
+            "💡 Recomendando producto Y"
+          ],
+          steps: [
+            {
+              icon: "👁️",
+              title: "Detección",
+              content: "Usuario visualizó producto de categoría 'Electrónicos'",
+              confidence: 100
+            },
+            {
+              icon: "📋",
+              title: "Regla",
+              content: "Aplicar regla: Electrónicos → Accesorios",
+              confidence: 85
+            },
+            {
+              icon: "🎯",
+              title: "Recomendación",
+              content: "Mostrar accesorios relacionados",
+              confidence: 80
+            }
+          ],
+          decision: "Recomendar accesorios para el producto visualizado"
+        },
+        trading: {
+          thoughts: [
+            "📊 Precio actual: $100",
+            "🔍 Verificando regla de trading",
+            "📋 Regla: SI precio > $99 ENTONCES vender",
+            "💰 Ejecutando venta automática"
+          ],
+          steps: [
+            {
+              icon: "👁️",
+              title: "Monitoreo",
+              content: "Precio actual supera umbral de $99",
+              confidence: 100
+            },
+            {
+              icon: "📋",
+              title: "Regla",
+              content: "Activar regla de venta automática",
+              confidence: 100
+            },
+            {
+              icon: "🎯",
+              title: "Ejecución",
+              content: "Realizar orden de venta",
+              confidence: 95
+            }
+          ],
+          decision: "Vender activo según regla predefinida"
+        },
+        asistente: {
+          thoughts: [
+            "💬 Usuario pregunta sobre horarios",
+            "🔍 Buscando en base de datos",
+            "📋 Información encontrada",
+            "💡 Respondiendo directamente"
+          ],
+          steps: [
+            {
+              icon: "👁️",
+              title: "Comprensión",
+              content: "Detectar palabra clave 'horarios'",
+              confidence: 95
+            },
+            {
+              icon: "🔍",
+              title: "Búsqueda",
+              content: "Consultar base de datos de horarios",
+              confidence: 100
+            },
+            {
+              icon: "🎯",
+              title: "Respuesta",
+              content: "Proporcionar información encontrada",
+              confidence: 90
+            }
+          ],
+          decision: "Mostrar horarios de atención al cliente"
+        }
+      },
+      objetivo: {
+        navegacion: {
+          thoughts: [
+            "🎯 Objetivo: Llegar a punto B",
+            "🗺️ Analizando mapa del entorno",
+            "🛤️ Calculando ruta óptima",
+            "⚠️ Detectando obstáculo en ruta",
+            "🔄 Recalculando ruta alternativa",
+            "✅ Nueva ruta encontrada"
+          ],
+          steps: [
+            {
+              icon: "🎯",
+              title: "Objetivo",
+              content: "Navegar desde A hasta B minimizando tiempo",
+              confidence: 100
+            },
+            {
+              icon: "🗺️",
+              title: "Planificación",
+              content: "Generar ruta óptima usando algoritmo A*",
+              confidence: 85
+            },
+            {
+              icon: "🔄",
+              title: "Re-planificación",
+              content: "Ajustar ruta por obstáculo detectado",
+              confidence: 90
+            },
+            {
+              icon: "🎯",
+              title: "Ejecución",
+              content: "Seguir nueva ruta calculada",
+              confidence: 95
+            }
+          ],
+          decision: "Seguir ruta alternativa que evita obstáculo y minimiza tiempo total"
+        },
+        recomendacion: {
+          thoughts: [
+            "🎯 Objetivo: Maximizar satisfacción del usuario",
+            "📊 Analizando historial de compras",
+            "🔍 Identificando patrones de preferencias",
+            "⚖️ Evaluando opciones disponibles",
+            "📈 Calculando probabilidad de compra",
+            "✅ Seleccionando mejor opción"
+          ],
+          steps: [
+            {
+              icon: "🎯",
+              title: "Objetivo",
+              content: "Recomendar producto que maximice probabilidad de compra",
+              confidence: 100
+            },
+            {
+              icon: "📊",
+              title: "Análisis",
+              content: "Procesar historial: 15 compras, preferencia por marca X",
+              confidence: 85
+            },
+            {
+              icon: "🔍",
+              title: "Búsqueda",
+              content: "Encontrar productos de marca X en stock",
+              confidence: 90
+            },
+            {
+              icon: "🎯",
+              title: "Selección",
+              content: "Elegir producto con mayor score de compatibilidad",
+              confidence: 88
+            }
+          ],
+          decision: "Recomendar smartphone marca X modelo Y con 88% de probabilidad de compra"
+        },
+        trading: {
+          thoughts: [
+            "🎯 Objetivo: Maximizar ganancias a largo plazo",
+            "📊 Analizando tendencias del mercado",
+            "🔍 Evaluando múltiples estrategias",
+            "📈 Calculando riesgo vs beneficio",
+            "⚖️ Comparando opciones de inversión",
+            "✅ Seleccionando estrategia óptima"
+          ],
+          steps: [
+            {
+              icon: "🎯",
+              title: "Objetivo",
+              content: "Maximizar ROI en horizonte de 6 meses",
+              confidence: 100
+            },
+            {
+              icon: "📊",
+              title: "Análisis",
+              content: "Evaluar 5 estrategias diferentes de trading",
+              confidence: 80
+            },
+            {
+              icon: "🔍",
+              title: "Optimización",
+              content: "Seleccionar estrategia con mejor ratio riesgo/beneficio",
+              confidence: 85
+            },
+            {
+              icon: "🎯",
+              title: "Ejecución",
+              content: "Implementar estrategia de diversificación",
+              confidence: 90
+            }
+          ],
+          decision: "Diversificar cartera con 60% acciones, 30% bonos, 10% crypto"
+        },
+        asistente: {
+          thoughts: [
+            "🎯 Objetivo: Resolver consulta del usuario completamente",
+            "🔍 Analizando contexto de la pregunta",
+            "📚 Identificando información necesaria",
+            "🗂️ Estructurando respuesta completa",
+            "✅ Verificando que responde todo",
+            "💡 Preparando respuesta final"
+          ],
+          steps: [
+            {
+              icon: "🎯",
+              title: "Objetivo",
+              content: "Proporcionar respuesta completa y útil",
+              confidence: 100
+            },
+            {
+              icon: "🔍",
+              title: "Análisis",
+              content: "Identificar 3 aspectos clave de la consulta",
+              confidence: 90
+            },
+            {
+              icon: "📚",
+              title: "Investigación",
+              content: "Recopilar información de múltiples fuentes",
+              confidence: 85
+            },
+            {
+              icon: "🎯",
+              title: "Síntesis",
+              content: "Estructurar respuesta completa y clara",
+              confidence: 92
+            }
+          ],
+          decision: "Proporcionar respuesta detallada que aborda todos los aspectos de la consulta"
+        }
+      },
+      utilidad: {
+        navegacion: {
+          thoughts: [
+            "⚖️ Evaluando múltiples factores",
+            "⏱️ Tiempo: Ruta A=5min, Ruta B=7min",
+            "⛽ Energía: Ruta A=alto, Ruta B=bajo",
+            "🛡️ Seguridad: Ruta A=media, Ruta B=alta",
+            "🧮 Calculando función de utilidad",
+            "📊 Ruta B tiene mayor utilidad total"
+          ],
+          steps: [
+            {
+              icon: "⚖️",
+              title: "Factores",
+              content: "Tiempo (peso: 0.4), Energía (peso: 0.3), Seguridad (peso: 0.3)",
+              confidence: 100
+            },
+            {
+              icon: "🧮",
+              title: "Cálculo",
+              content: "Utilidad A: 0.6, Utilidad B: 0.75",
+              confidence: 92
+            },
+            {
+              icon: "🎯",
+              title: "Decisión",
+              content: "Seleccionar opción con mayor utilidad",
+              confidence: 95
+            }
+          ],
+          decision: "Elegir Ruta B por mayor utilidad total (0.75 vs 0.6)"
+        },
+        recomendacion: {
+          thoughts: [
+            "⚖️ Evaluando múltiples criterios",
+            "💰 Precio: Producto A=€50, Producto B=€80",
+            "⭐ Calidad: Producto A=3/5, Producto B=5/5",
+            "📦 Disponibilidad: A=inmediata, B=3 días",
+            "🧮 Calculando utilidad para el usuario",
+            "📊 Producto B tiene mayor utilidad"
+          ],
+          steps: [
+            {
+              icon: "⚖️",
+              title: "Criterios",
+              content: "Precio (peso: 0.3), Calidad (peso: 0.5), Disponibilidad (peso: 0.2)",
+              confidence: 100
+            },
+            {
+              icon: "🧮",
+              title: "Cálculo",
+              content: "Utilidad A: 0.65, Utilidad B: 0.78",
+              confidence: 88
+            },
+            {
+              icon: "🎯",
+              title: "Recomendación",
+              content: "Sugerir producto con mayor utilidad esperada",
+              confidence: 85
+            }
+          ],
+          decision: "Recomendar Producto B por mayor utilidad total (0.78 vs 0.65)"
+        },
+        trading: {
+          thoughts: [
+            "📈 Analizando múltiples indicadores",
+            "💰 Potencial ganancia: +15%",
+            "⚠️ Riesgo estimado: 8%",
+            "📊 Ratio riesgo/beneficio: 1.87",
+            "🧮 Calculando utilidad esperada",
+            "✅ Utilidad positiva detectada"
+          ],
+          steps: [
+            {
+              icon: "📊",
+              title: "Análisis",
+              content: "RSI: 35, MACD: positivo, Volumen: alto",
+              confidence: 85
+            },
+            {
+              icon: "⚖️",
+              title: "Evaluación",
+              content: "Utilidad esperada: (0.15 * 0.7) - (0.08 * 0.3) = 0.081",
+              confidence: 78
+            },
+            {
+              icon: "🎯",
+              title: "Decisión",
+              content: "Ejecutar compra con stop-loss en -5%",
+              confidence: 82
+            }
+          ],
+          decision: "Comprar activo con utilidad esperada del 8.1%"
+        },
+        asistente: {
+          thoughts: [
+            "⚖️ Evaluando calidad vs velocidad de respuesta",
+            "⏱️ Respuesta rápida: utilidad 0.6",
+            "🔍 Respuesta detallada: utilidad 0.8",
+            "👤 Perfil usuario: prefiere calidad",
+            "🧮 Ajustando pesos según preferencias",
+            "📊 Respuesta detallada tiene mayor utilidad"
+          ],
+          steps: [
+            {
+              icon: "⚖️",
+              title: "Factores",
+              content: "Velocidad (peso: 0.3), Precisión (peso: 0.4), Completitud (peso: 0.3)",
+              confidence: 95
+            },
+            {
+              icon: "👤",
+              title: "Personalización",
+              content: "Ajustar pesos según historial del usuario",
+              confidence: 80
+            },
+            {
+              icon: "🧮",
+              title: "Cálculo",
+              content: "Utilidad respuesta detallada: 0.82",
+              confidence: 88
+            },
+            {
+              icon: "🎯",
+              title: "Optimización",
+              content: "Seleccionar respuesta que maximiza utilidad",
+              confidence: 90
+            }
+          ],
+          decision: "Proporcionar respuesta detallada y completa optimizada para el usuario"
+        }
+      },
+      aprendizaje: {
+        navegacion: {
+          thoughts: [
+            "🧠 Recordando experiencias pasadas",
+            "📊 Analizando 1,247 navegaciones previas",
+            "🔍 Patrón detectado: Ruta X falla 23% del tiempo",
+            "📈 Modelo actualizado con nueva información",
+            "🎯 Aplicando conocimiento aprendido",
+            "✅ Seleccionando ruta con mayor éxito histórico"
+          ],
+          steps: [
+            {
+              icon: "🧠",
+              title: "Memoria",
+              content: "Accediendo a base de experiencias: 1,247 casos",
+              confidence: 100
+            },
+            {
+              icon: "📊",
+              title: "Aprendizaje",
+              content: "Patrón: Ruta A exitosa 89%, Ruta B exitosa 76%",
+              confidence: 94
+            },
+            {
+              icon: "🔄",
+              title: "Adaptación",
+              content: "Actualizando pesos del modelo neural",
+              confidence: 87
+            },
+            {
+              icon: "🎯",
+              title: "Aplicación",
+              content: "Usar conocimiento para decisión actual",
+              confidence: 91
+            }
+          ],
+          decision: "Elegir Ruta A basándose en 89% de éxito histórico"
+        },
+        recomendacion: {
+          thoughts: [
+            "🧠 Analizando comportamiento del usuario",
+            "📊 Historial: 50 compras, 15 devoluciones",
+            "🔍 Patrón: prefiere productos premium",
+            "📈 Modelo actualizado: +5% precisión",
+            "🎯 Aplicando aprendizaje personalizado",
+            "✅ Recomendación optimizada generada"
+          ],
+          steps: [
+            {
+              icon: "🧠",
+              title: "Historial",
+              content: "Analizar 50 interacciones previas del usuario",
+              confidence: 100
+            },
+            {
+              icon: "📊",
+              title: "Patrones",
+              content: "Detectar preferencia por calidad sobre precio",
+              confidence: 92
+            },
+            {
+              icon: "🔄",
+              title: "Aprendizaje",
+              content: "Actualizar modelo con feedback reciente",
+              confidence: 88
+            },
+            {
+              icon: "🎯",
+              title: "Personalización",
+              content: "Generar recomendación adaptada al perfil",
+              confidence: 95
+            }
+          ],
+          decision: "Recomendar producto premium basándose en patrón de comportamiento aprendido"
+        },
+        trading: {
+          thoughts: [
+            "🧠 Analizando 10,000 operaciones históricas",
+            "📊 Patrón detectado: volatilidad alta = oportunidad",
+            "🔍 Modelo aprende: RSI<30 + volumen alto = compra",
+            "📈 Precisión del modelo: 73% → 78%",
+            "🎯 Aplicando estrategia aprendida",
+            "✅ Ejecutando operación con alta confianza"
+          ],
+          steps: [
+            {
+              icon: "🧠",
+              title: "Experiencia",
+              content: "Procesar 10,000 operaciones históricas",
+              confidence: 100
+            },
+            {
+              icon: "📊",
+              title: "Patrones",
+              content: "Identificar señales exitosas: RSI + Volumen",
+              confidence: 85
+            },
+            {
+              icon: "🔄",
+              title: "Mejora",
+              content: "Incrementar precisión del 73% al 78%",
+              confidence: 82
+            },
+            {
+              icon: "🎯",
+              title: "Aplicación",
+              content: "Ejecutar estrategia con mayor confianza",
+              confidence: 89
+            }
+          ],
+          decision: "Comprar activo aplicando patrón aprendido con 78% de precisión histórica"
+        },
+        asistente: {
+          thoughts: [
+            "🧠 Analizando contexto de la conversación",
+            "📚 Consultando base de conocimiento",
+            "🔍 Identificando intención del usuario",
+            "📊 Evaluando respuestas anteriores similares",
+            "🎯 Personalizando respuesta al usuario",
+            "✅ Generando respuesta optimizada"
+          ],
+          steps: [
+            {
+              icon: "🔍",
+              title: "Comprensión",
+              content: "Intención: Solicitud de información técnica",
+              confidence: 92
+            },
+            {
+              icon: "📚",
+              title: "Conocimiento",
+              content: "Consultando 15 fuentes relevantes",
+              confidence: 88
+            },
+            {
+              icon: "🎯",
+              title: "Personalización",
+              content: "Adaptando nivel técnico al perfil del usuario",
+              confidence: 85
+            },
+            {
+              icon: "📝",
+              title: "Generación",
+              content: "Creando respuesta estructurada y clara",
+              confidence: 90
+            }
+          ],
+          decision: "Proporcionar explicación técnica detallada con ejemplos prácticos"
+        }
+      }
+    };
+    // Navegación de pestañas
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(this.dataset.tab).classList.add('active');
+      });
+    });
+    // Funciones para la demo de pensamiento
+    function startThinking() {
+      if (isThinking) return;
+      isThinking = true;
+      const scenario = document.getElementById('scenarioSelect').value;
+      const data = thinkingData[currentAgentType][scenario];
+      if (!data) {
+        console.error('No data found for', currentAgentType, scenario);
+        isThinking = false;
+        return;
+      }
+      // Limpiar contenido anterior
+      document.getElementById('thoughtBubbles').innerHTML = '';
+      document.getElementById('thinkingSteps').innerHTML = '';
+      document.getElementById('finalDecision').classList.remove('active');
+      // Mostrar burbujas de pensamiento
+      data.thoughts.forEach((thought, index) => {
+        setTimeout(() => {
+          addThoughtBubble(thought);
+        }, index * 800);
+      });
+      // Mostrar pasos de razonamiento
+      data.steps.forEach((step, index) => {
+        setTimeout(() => {
+          addThinkingStep(step, index);
+        }, (data.thoughts.length * 800) + (index * 1000));
+      });
+      // Mostrar decisión final
+      setTimeout(() => {
+        showFinalDecision(data.decision);
+        isThinking = false;
+      }, (data.thoughts.length * 800) + (data.steps.length * 1000) + 500);
+    }
+    function addThoughtBubble(thought) {
+      const container = document.getElementById('thoughtBubbles');
+      const bubble = document.createElement('div');
+      bubble.className = 'thought-bubble';
+      bubble.textContent = thought;
+      container.appendChild(bubble);
+      setTimeout(() => bubble.classList.add('active'), 100);
+    }
+    function addThinkingStep(step, index) {
+      const container = document.getElementById('thinkingSteps');
+      const stepDiv = document.createElement('div');
+      stepDiv.className = 'step-container';
+      stepDiv.innerHTML = `
+        <div class="step-header">
+          <div class="step-icon">${step.icon}</div>
+          <div class="step-title">${step.title}</div>
+        </div>
+        <div class="step-content">
+          ${step.content}
+          <div class="confidence-bar">
+            <div class="confidence-label">Confianza: ${step.confidence}%</div>
+            <div class="confidence-progress">
+              <div class="confidence-fill"></div>
+            </div>
+          </div>
+        </div>
+      `;
+      container.appendChild(stepDiv);
+      setTimeout(() => {
+        stepDiv.classList.add('active');
+        const fill = stepDiv.querySelector('.confidence-fill');
+        setTimeout(() => {
+          fill.style.width = step.confidence + '%';
+        }, 200);
+      }, 100);
+    }
+    function showFinalDecision(decision) {
+      const decisionElement = document.getElementById('finalDecision');
+      document.getElementById('decisionContent').textContent = decision;
+      decisionElement.classList.add('active');
+    }
+    function resetThinking() {
+      isThinking = false;
+      document.getElementById('thoughtBubbles').innerHTML = '';
+      document.getElementById('thinkingSteps').innerHTML = '';
+      document.getElementById('finalDecision').classList.remove('active');
+      document.getElementById('decisionContent').textContent = 'Esperando simulación...';
+    }
+    // Funciones del demo de PartyRock
+    function setupDragAndDrop() {
+      const components = document.querySelectorAll('.component-item');
+      const canvas = document.getElementById('demoCanvas');
+      if (!canvas) return;
+      components.forEach(component => {
+        component.addEventListener('dragstart', function(e) {
+          draggedComponent = this.dataset.component;
+          this.style.opacity = '0.5';
+        });
+        component.addEventListener('dragend', function(e) {
+          this.style.opacity = '1';
+        });
+      });
+      canvas.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#ff9900';
+        this.style.backgroundColor = 'rgba(255,153,0,0.1)';
+      });
+      canvas.addEventListener('dragleave', function(e) {
+        this.style.borderColor = '#ccc';
+        this.style.backgroundColor = '';
+      });
+      canvas.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = '#ccc';
+        this.style.backgroundColor = '';
+        if (draggedComponent) {
+          addComponentToCanvas(draggedComponent);
+          draggedComponent = null;
+        }
+      });
+    }
+    function addComponentToCanvas(componentType) {
+      const canvas = document.getElementById('demoCanvas');
+      const placeholder = canvas.querySelector('.canvas-placeholder');
+      if (placeholder) {
+        placeholder.remove();
+      }
+      const componentNames = {
+        'text-input': '📝 Entrada de Texto',
+        'ai-generator': '🤖 Generador IA',
+        'image-gen': '🎨 Generador Imagen',
+        'output': '📤 Salida'
+      };
+      const componentDiv = document.createElement('div');
+      componentDiv.className = 'dropped-component';
+      componentDiv.textContent = componentNames[componentType];
+      componentDiv.dataset.component = componentType;
+      componentDiv.addEventListener('click', function() {
+        this.remove();
+        droppedComponents = droppedComponents.filter(c => c !== componentType);
+        if (canvas.children.length === 0) {
+          canvas.innerHTML = '<div class="canvas-placeholder">🎯 Arrastra componentes aquí para crear tu app<br><small>Ejemplo: Entrada de Texto → Generador IA → Salida</small></div>';
+        }
+      });
+      canvas.appendChild(componentDiv);
+      droppedComponents.push(componentType);
+    }
+    window.runDemo = function() {
+      const output = document.getElementById('demoOutput');
+      const outputContent = document.getElementById('outputContent');
+      if (droppedComponents.length === 0) {
+        alert('🎯 Primero arrastra algunos componentes al canvas');
+        return;
+      }
+      output.style.display = 'block';
+      outputContent.innerHTML = '<div class="loading"></div> Procesando...';
+      setTimeout(() => {
+        const results = {
+          'text-input': 'Usuario ingresó: "Crea una historia sobre un robot"',
+          'ai-generator': 'IA generó: "Había una vez un robot llamado Zyx que soñaba con ser artista..."',
+          'image-gen': 'Imagen generada: [Robot pintando en un lienzo]',
+          'output': 'App completada: Historia + Imagen mostradas al usuario'
+        };
+        let resultText = '✨ Flujo ejecutado exitosamente:\n';
+        droppedComponents.forEach((comp, index) => {
+          resultText += `${index + 1}. ${results[comp]}\n`;
+        });
+        outputContent.textContent = resultText;
+      }, 2000);
+    };
+    window.clearDemo = function() {
+      const canvas = document.getElementById('demoCanvas');
+      const output = document.getElementById('demoOutput');
+      if (canvas) {
+        canvas.innerHTML = '<div class="canvas-placeholder">🎯 Arrastra componentes aquí para crear tu app<br><small>Ejemplo: Entrada de Texto → Generador IA → Salida</small></div>';
+      }
+      if (output) {
+        output.style.display = 'none';
+      }
+      droppedComponents = [];
+    };
+    window.saveDemo = function() {
+      if (droppedComponents.length === 0) {
+        alert('🎯 No hay componentes para guardar');
+        return;
+      }
+      const appConfig = {
+        components: droppedComponents,
+        timestamp: new Date().toISOString(),
+        name: `Mi App PartyRock ${Date.now()}`
+      };
+      alert(`💾 App guardada: "${appConfig.name}"\nComponentes: ${droppedComponents.length}\n(En PartyRock real, esto se guardaría en tu cuenta)`);
+    };
+    // Renderizar agentes con interactividad mejorada
+    function renderAgents() {
+      const container = document.getElementById('agentsGrid');
+      container.innerHTML = `
+        <div class="card-grid">
+          ${appData.tiposAgentes.map((a, i) => `
+          <div class="card card-collapsible" data-index="${i}">
+            <span class="toggle-icon">▶</span>
+            <div class="card-title">${a.nombre}</div>
+            <div class="badges">
+              <span class="badge ${a.complejidad.toLowerCase()}">${a.complejidad}</span>
+              <span class="badge ${a.autonomia.toLowerCase()}">${a.autonomia}</span>
+              <span class="badge ${a.memoria ? 'si' : 'no'}">${a.memoria ? '🧠 Con memoria' : '🚫 Sin memoria'}</span>
+            </div>
+            <div style="margin-bottom: 12px; line-height: 1.6;">${a.descripcion}</div>
+            <div style="margin-bottom: 8px;"><b>💼 Caso de uso:</b> ${a.casoUso}</div>
+            <div class="card-details">
+              <hr style="margin:16px 0; border: 1px solid #e0e0e0;">
+              <div class="ventajas">
+                <h4>Ventajas</h4>
+                <ul>${a.ventajas.map((v, idx) => `<li style="--i: ${idx}">${v}</li>`).join('')}</ul>
+              </div>
+              <div class="desventajas">
+                <h4>Desventajas</h4>
+                <ul>${a.desventajas.map((d, idx) => `<li style="--i: ${idx}">${d}</li>`).join('')}</ul>
+              </div>
+            </div>
+            <div class="click-hint">
+              <span>✨ Click para ${i === 0 ? 'expandir' : 'ver detalles'}</span>
+            </div>
+          </div>
+          `).join('')}
+        </div>
+      `;
+      // Event listeners para tarjetas
+      document.querySelectorAll('.card-collapsible').forEach(card => {
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Cerrar otras tarjetas
+          document.querySelectorAll('.card-collapsible').forEach(c => {
+            if (c !== card && c.classList.contains('open')) {
+              c.classList.remove('open');
+              const otherIcon = c.querySelector('.toggle-icon');
+              const otherHint = c.querySelector('.click-hint span');
+              if (otherIcon) otherIcon.textContent = '▶';
+              if (otherHint) otherHint.textContent = '✨ Click para ver detalles';
+            }
+          });
+          // Toggle tarjeta actual
+          card.classList.toggle('open');
+          const icon = card.querySelector('.toggle-icon');
+          const hint = card.querySelector('.click-hint span');
+          if (card.classList.contains('open')) {
+            if (icon) icon.textContent = '▼';
+            if (hint) hint.textContent = '✨ Click para contraer';
+          } else {
+            if (icon) icon.textContent = '▶';
+            if (hint) hint.textContent = '✨ Click para ver detalles';
+          }
+        });
+      });
+    }
+    // Renderizar frameworks
+    function renderFrameworks() {
+      const container = document.getElementById('frameworksCards');
+      container.innerHTML = `
+        <div class="card-grid">
+          ${appData.frameworks.map((f, i) => `
+          <div class="card card-collapsible" data-index="${i}">
+            <span class="toggle-icon">▶</span>
+            <div class="card-title">${f.nombre}</div>
+            <div class="badges">
+              <span class="badge">${f.tipo}</span>
+            </div>
+            <div style="margin-bottom: 16px; line-height: 1.6;">${f.descripcion}</div>
+            <div class="card-details">
+              <hr style="margin:16px 0; border: 1px solid #e0e0e0;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div>
+                  <h4 style="margin-bottom: 12px;">📊 Métricas</h4>
+                  <div style="font-size: 0.9em;">
+                    <div>Facilidad de uso: ${f.facilidadUso}/10</div>
+                    <div>Flexibilidad: ${f.flexibilidad}/10</div>
+                    <div>Soporte empresarial: ${f.soporteEmpresarial}/10</div>
+                    <div>Comunidad: ${f.comunidad}/10</div>
+                    <div>Documentación: ${f.documentacion}/10</div>
+                  </div>
+                </div>
+                <div>
+                  <div class="ventajas">
+                    <h4>Ventajas</h4>
+                    <ul>${f.ventajas.map((v, idx) => `<li style="--i: ${idx}">${v}</li>`).join('')}</ul>
+                  </div>
+                  <div class="desventajas">
+                    <h4>Desventajas</h4>
+                    <ul>${f.desventajas.map((d, idx) => `<li style="--i: ${idx}">${d}</li>`).join('')}</ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="click-hint">
+              <span>✨ Click para ver detalles</span>
+            </div>
+          </div>
+          `).join('')}
+        </div>
+      `;
+      // Event listeners para frameworks
+      document.querySelectorAll('#frameworksCards .card-collapsible').forEach(card => {
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          card.classList.toggle('open');
+          const icon = card.querySelector('.toggle-icon');
+          const hint = card.querySelector('.click-hint span');
+          if (card.classList.contains('open')) {
+            if (icon) icon.textContent = '▼';
+            if (hint) hint.textContent = '✨ Click para contraer';
+          } else {
+            if (icon) icon.textContent = '▶';
+            if (hint) hint.textContent = '✨ Click para ver detalles';
+          }
+        });
+      });
+    }
+    // Renderizar industrias
+    function renderIndustries() {
+      const container = document.getElementById('industryCards');
+      container.innerHTML = appData.industrias.map((ind, i) => `
+        <div class="card card-collapsible" data-index="${i}">
+          <span class="toggle-icon">▶</span>
+          <div class="card-title">${ind.nombre}</div>
+          <div class="badges">
+            <span class="badge">${ind.roi} ROI</span>
+            <span class="badge ${ind.complejidad.toLowerCase()}">${ind.complejidad}</span>
+          </div>
+          <div class="card-details">
+            <hr style="margin:16px 0; border: 1px solid #e0e0e0;">
+            <div style="margin-bottom: 20px;">
+              <h4 style="margin-bottom: 12px;">💼 Casos de Uso</h4>
+              <ul style="margin: 0; padding-left: 20px;">
+                ${ind.casosUso.map(caso => `<li style="margin-bottom: 8px;">${caso}</li>`).join('')}
+              </ul>
+            </div>
+            <div>
+              <h4 style="margin-bottom: 12px;">🌟 Ejemplos Reales</h4>
+              <ul style="margin: 0; padding-left: 20px;">
+                ${ind.ejemplos.map(ejemplo => `<li style="margin-bottom: 8px;">${ejemplo}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+          <div class="click-hint">
+            <span>✨ Click para ver casos de uso</span>
+          </div>
+        </div>
+      `).join('');
+      // Event listeners para industrias
+      document.querySelectorAll('#industryCards .card-collapsible').forEach(card => {
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          card.classList.toggle('open');
+          const icon = card.querySelector('.toggle-icon');
+          const hint = card.querySelector('.click-hint span');
+          if (card.classList.contains('open')) {
+            if (icon) icon.textContent = '▼';
+            if (hint) hint.textContent = '✨ Click para contraer';
+          } else {
+            if (icon) icon.textContent = '▶';
+            if (hint) hint.textContent = '✨ Click para ver casos de uso';
+          }
+        });
+      });
+    }
+    // Calculadora de ROI
+    window.calcularROI = function() {
+      const industria = document.getElementById('roiIndustry').value;
+      const inversion = parseFloat(document.getElementById('roiInput').value);
+      const resultDiv = document.getElementById('roiResult');
+      if (!inversion || inversion <= 0) {
+        alert('Por favor, introduce una inversión válida');
+        return;
+      }
+      const multipliers = {
+        'Tecnología': { min: 5, max: 10, tiempo: '6-12 meses' },
+        'Marketing': { min: 4, max: 8, tiempo: '3-9 meses' },
+        'Retail/E-commerce': { min: 4, max: 7, tiempo: '6-18 meses' },
+        'Servicios Financieros': { min: 3, max: 6, tiempo: '12-24 meses' }
+      };
+      const mult = multipliers[industria];
+      const roiMin = inversion * mult.min;
+      const roiMax = inversion * mult.max;
+      resultDiv.innerHTML = `
+        <h4>💰 Proyección de ROI para ${industria}</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;">
+          <div style="background: #e8f5e8; padding: 16px; border-radius: 8px;">
+            <strong>Escenario Conservador</strong><br>
+            Retorno: €${roiMin.toLocaleString()}<br>
+            ROI: ${mult.min}x
+          </div>
+          <div style="background: #e8f5e8; padding: 16px; border-radius: 8px;">
+            <strong>Escenario Optimista</strong><br>
+            Retorno: €${roiMax.toLocaleString()}<br>
+            ROI: ${mult.max}x
+          </div>
+        </div>
+        <div style="background: #fff8f0; padding: 16px; border-radius: 8px;">
+          <strong>⏱️ Tiempo estimado de retorno:</strong> ${mult.tiempo}
+        </div>
+      `;
+      resultDiv.style.display = 'block';
+    };
+    // Evaluador de métricas interactivo
+    function setupMetricsEvaluator() {
+      const sliders = ['precision', 'tiempo', 'satisfaccion'];
+      sliders.forEach(metric => {
+        const slider = document.getElementById(metric + 'Slider');
+        const valueSpan = document.getElementById(metric + 'Value');
+        if (slider && valueSpan) {
+          slider.addEventListener('input', function() {
+            valueSpan.textContent = this.value;
+            updateGeneralScore();
+          });
+        }
+      });
+    }
+    function updateGeneralScore() {
+      const precision = parseFloat(document.getElementById('precisionSlider').value);
+      const tiempo = parseFloat(document.getElementById('tiempoSlider').value);
+      const satisfaccion = parseFloat(document.getElementById('satisfaccionSlider').value);
+      // Normalizar tiempo (invertir porque menor tiempo es mejor)
+      const tiempoNorm = 100 - ((tiempo - 100) / 900 * 100);
+      const satisfaccionNorm = (satisfaccion - 3) / 2 * 100;
+      // Calcular puntuación general (pesos: precisión 40%, tiempo 30%, satisfacción 30%)
+      const puntuacion = Math.round(precision * 0.4 + tiempoNorm * 0.3 + satisfaccionNorm * 0.3);
+      document.getElementById('puntuacionGeneral').textContent = puntuacion;
+    }
+    // Configurar selectores de agente
+    function setupAgentTypeSelector() {
+      document.querySelectorAll('.agent-type-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.agent-type-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          currentAgentType = this.dataset.agent;
+        });
+      });
+    }
+    // Crear gráficos
+    function createCharts() {
+      // Gráfico hero
+      const heroCtx = document.getElementById('heroChart');
+      if (heroCtx) {
+        new Chart(heroCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Agentes Reactivos', 'Basados en Objetivos', 'Basados en Utilidad', 'Con Aprendizaje'],
+            datasets: [{
+              data: [35, 25, 20, 20],
+              backgroundColor: ['#ff9900', '#ffb84d', '#146eb4', '#232f3e'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  padding: 20,
+                  usePointStyle: true,
+                  font: {
+                    size: 12,
+                    family: 'Nunito'
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+      // Gráfico Amazon Q
+      const amazonQCtx = document.getElementById('amazonQChart');
+      if (amazonQCtx) {
+        new Chart(amazonQCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Q Developer', 'Q Business', 'Q Apps'],
+            datasets: [{
+              label: 'Funcionalidades',
+              data: [8, 6, 4],
+              backgroundColor: ['#ff9900', '#ffb84d', '#ff6600'],
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 10
+              }
+            }
+          }
+        });
+      }
+      // Gráfico Cedric
+      const cedricCtx = document.getElementById('cedricChart');
+      if (cedricCtx) {
+        new Chart(cedricCtx, {
+          type: 'line',
+          data: {
+            labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+            datasets: [{
+              label: 'Adopción (%)',
+              data: [20, 35, 50, 65, 75, 85],
+              borderColor: '#ff9900',
+              backgroundColor: 'rgba(255,153,0,0.1)',
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100
+              }
+            }
+          }
+        });
+      }
+      // Gráfico PartyRock
+      const partyrockCtx = document.getElementById('partyrockChart');
+      if (partyrockCtx) {
+        new Chart(partyrockCtx, {
+          type: 'pie',
+          data: {
+            labels: ['Chatbots', 'Generadores de Contenido', 'Herramientas Educativas', 'Otros'],
+            datasets: [{
+              data: [40, 30, 20, 10],
+              backgroundColor: ['#ff9900', '#ffb84d', '#146eb4', '#232f3e']
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }
+        });
+      }
+      // Gráfico Sapien
+      const sapienCtx = document.getElementById('sapienChart');
+      if (sapienCtx) {
+        new Chart(sapienCtx, {
+          type: 'radar',
+          data: {
+            labels: ['Análisis Predictivo', 'Procesamiento de Datos', 'Visualización', 'Automatización', 'Integración'],
+            datasets: [{
+              label: 'Capacidades',
+              data: [95, 90, 85, 88, 92],
+              borderColor: '#ff9900',
+              backgroundColor: 'rgba(255,153,0,0.2)',
+              pointBackgroundColor: '#ff9900'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                beginAtZero: true,
+                max: 100
+              }
+            }
+          }
+        });
+      }
+      // Gráfico Frameworks
+      const frameworksCtx = document.getElementById('frameworksChart');
+      if (frameworksCtx) {
+        new Chart(frameworksCtx, {
+          type: 'radar',
+          data: {
+            labels: ['Facilidad de Uso', 'Flexibilidad', 'Soporte Empresarial', 'Comunidad', 'Documentación'],
+            datasets: appData.frameworks.map((f, i) => ({
+              label: f.nombre,
+              data: [f.facilidadUso, f.flexibilidad, f.soporteEmpresarial, f.comunidad, f.documentacion],
+              borderColor: ['#667eea', '#764ba2', '#f093fb', '#4facfe'][i],
+              backgroundColor: ['rgba(102,126,234,0.2)', 'rgba(118,75,162,0.2)', 'rgba(240,147,251,0.2)', 'rgba(79,172,254,0.2)'][i],
+              pointBackgroundColor: ['#667eea', '#764ba2', '#f093fb', '#4facfe'][i]
+            }))
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                beginAtZero: true,
+                max: 10
+              }
+            }
+          }
+        });
+      }
+      // Gráfico ROI por industria
+      const roiCtx = document.getElementById('roiChart');
+      if (roiCtx) {
+        new Chart(roiCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Tecnología', 'Marketing', 'Retail/E-commerce', 'Servicios Financieros'],
+            datasets: [{
+              label: 'ROI Mínimo',
+              data: [5, 4, 4, 3],
+              backgroundColor: 'rgba(102,126,234,0.7)'
+            }, {
+              label: 'ROI Máximo',
+              data: [10, 8, 7, 6],
+              backgroundColor: 'rgba(118,75,162,0.7)'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Multiplicador de ROI'
+                }
+              }
+            }
+          }
+        });
+      }
+      // Gráfico de tendencias
+      const tendenciasCtx = document.getElementById('tendenciasChart');
+      if (tendenciasCtx) {
+        const years = [];
+        const values = [];
+        const baseValue = 5.43;
+        const cagr = 0.4582;
+        for (let i = 0; i <= 10; i++) {
+          years.push(2024 + i);
+          values.push(baseValue * Math.pow(1 + cagr, i));
+        }
+        new Chart(tendenciasCtx, {
+          type: 'line',
+          data: {
+            labels: years,
+            datasets: [{
+              label: 'Valor del Mercado (Billones USD)',
+              data: values,
+              borderColor: '#667eea',
+              backgroundColor: 'rgba(102,126,234,0.1)',
+              tension: 0.4,
+              fill: true,
+              pointRadius: 6,
+              pointHoverRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: 'Billones USD'
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Año'
+                }
+              }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: $${context.parsed.y.toFixed(2)}B USD`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', function() {
+      renderAgents();
+      renderFrameworks();
+      renderIndustries();
+      setupMetricsEvaluator();
+      setupAgentTypeSelector();
+      setupDragAndDrop();
+      createCharts();
+      // Animar métricas del dashboard
+      setTimeout(() => {
+        const metrics = document.querySelectorAll('.metric-value');
+        metrics.forEach(metric => {
+          metric.style.transform = 'scale(1.1)';
+          setTimeout(() => {
+            metric.style.transform = 'scale(1)';
+          }, 200);
+        });
+      }, 1000);
+    });
+    // Estilos adicionales para componentes específicos
+    const additionalStyles = `
+      <style>
+        .roi-calc {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          margin: 30px 0;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+          border: 3px solid rgba(102,126,234,0.1);
+        }
+        .roi-calc h3 {
+          color: var(--main-dark);
+          margin-top: 0;
+          margin-bottom: 20px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+        }
+        .roi-calc label {
+          display: block;
+          margin: 16px 0 8px 0;
+          font-weight: 600;
+          color: var(--main-text);
+        }
+        .roi-calc select, .roi-calc input {
+          width: 100%;
+          padding: 12px 16px;
+          border-radius: 10px;
+          border: 2px solid #e0e0e0;
+          font-size: 1em;
+          font-family: 'Nunito', sans-serif;
+          margin-bottom: 16px;
+        }
+        .roi-calc button {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 10px;
+          font-size: 1em;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .roi-calc button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+        .roi-result {
+          margin-top: 20px;
+          padding: 20px;
+          background: linear-gradient(135deg, #e8f5e8, #ffffff);
+          border-radius: 15px;
+          border-left: 6px solid #4caf50;
+        }
+        .roi-result h4 {
+          color: #2e7d32;
+          margin-top: 0;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .slider-container {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          margin: 30px 0;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+          border: 3px solid rgba(102,126,234,0.1);
+        }
+        .slider-row {
+          margin-bottom: 25px;
+        }
+        .slider-row label {
+          display: block;
+          margin-bottom: 10px;
+          font-weight: 600;
+          color: var(--main-text);
+          font-family: 'Montserrat', sans-serif;
+        }
+        .slider {
+          width: 100%;
+          height: 8px;
+          border-radius: 5px;
+          background: #e0e0e0;
+          outline: none;
+          -webkit-appearance: none;
+        }
+        .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          cursor: pointer;
+          box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .slider::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .score-display {
+          text-align: center;
+          margin-top: 30px;
+          padding: 20px;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          border-radius: 15px;
+          font-size: 1.3em;
+          font-weight: 700;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .comparison-table {
+          margin: 30px 0;
+          overflow-x: auto;
+        }
+        .comparison-table table {
+          width: 100%;
+          border-collapse: collapse;
+          background: white;
+          border-radius: 15px;
+          overflow: hidden;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+        }
+        .comparison-table th {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          padding: 16px;
+          text-align: left;
+          font-weight: 700;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .comparison-table td {
+          padding: 12px 16px;
+          border-bottom: 1px solid #e0e0e0;
+        }
+        .comparison-table .scenario {
+          font-weight: 600;
+          color: var(--main-dark);
+          font-family: 'Montserrat', sans-serif;
+        }
+        .best-choice {
+          background: linear-gradient(135deg, #4caf50, #45a049);
+          color: white;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-weight: 700;
+          font-size: 0.9em;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .good-choice {
+          background: linear-gradient(135deg, #ff9800, #f57c00);
+          color: white;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-weight: 700;
+          font-size: 0.9em;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .not-ideal {
+          background: linear-gradient(135deg, #f44336, #d32f2f);
+          color: white;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-weight: 700;
+          font-size: 0.9em;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .pricing-table {
+          display: grid;
+          gap: 20px;
+          margin: 30px 0;
+        }
+        .pricing-card {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          text-align: center;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+          border: 3px solid transparent;
+          transition: all 0.4s ease;
+        }
+        .pricing-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 60px rgba(102,126,234,0.2);
+          border-color: #667eea;
+        }
+        .pricing-card h4 {
+          color: var(--main-dark);
+          margin-top: 0;
+          margin-bottom: 15px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+        }
+        .pricing-card .price {
+          font-size: 2.5em;
+          font-weight: 800;
+          color: #667eea;
+          margin-bottom: 20px;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .features-list {
+          list-style: none;
+          padding: 0;
+          text-align: left;
+        }
+        .features-list li {
+          margin-bottom: 10px;
+          padding-left: 20px;
+          position: relative;
+        }
+        .platform-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+          gap: 30px;
+          margin: 40px 0;
+        }
+        .platform-card {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+          border: 3px solid transparent;
+          transition: all 0.4s ease;
+        }
+        .platform-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 60px rgba(255,153,0,0.2);
+          border-color: var(--amazon-orange);
+        }
+        .platform-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        .platform-icon {
+          font-size: 2em;
+          margin-right: 15px;
+        }
+        .platform-title {
+          font-size: 1.4em;
+          font-weight: 700;
+          color: var(--amazon-blue);
+          font-family: 'Montserrat', sans-serif;
+        }
+        .platform-description {
+          margin-bottom: 20px;
+          line-height: 1.6;
+          color: var(--main-text);
+        }
+        .platform-features {
+          list-style: none;
+          padding: 0;
+        }
+        .platform-features li {
+          margin-bottom: 8px;
+          padding-left: 20px;
+          position: relative;
+          color: var(--main-text);
+        }
+        .platform-features li::before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          color: var(--amazon-orange);
+          font-weight: 700;
+        }
+        .use-cases {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 30px;
+          margin: 40px 0;
+        }
+        .use-case-card {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+          border: 3px solid transparent;
+          transition: all 0.4s ease;
+        }
+        .use-case-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 60px rgba(255,153,0,0.2);
+          border-color: var(--amazon-orange);
+        }
+        .use-case-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 15px;
+        }
+        .use-case-icon {
+          font-size: 2em;
+          margin-right: 15px;
+        }
+        .use-case-title {
+          font-size: 1.3em;
+          font-weight: 700;
+          color: var(--amazon-blue);
+          font-family: 'Montserrat', sans-serif;
+        }
+        .use-case-description {
+          margin-bottom: 20px;
+          line-height: 1.6;
+          color: var(--main-text);
+        }
+        .use-case-impact {
+          background: #fff8f0;
+          padding: 15px;
+          border-radius: 10px;
+          border-left: 4px solid var(--amazon-orange);
+        }
+        .impact-title {
+          font-weight: 700;
+          color: var(--amazon-blue);
+          margin-bottom: 8px;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .challenges-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 30px;
+          margin: 40px 0;
+        }
+        .challenge-card {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+          border: 3px solid transparent;
+          transition: all 0.4s ease;
+        }
+        .challenge-card.warning {
+          border-color: #ff9800;
+        }
+        .challenge-card.error {
+          border-color: #f44336;
+        }
+        .challenge-card.success {
+          border-color: #4caf50;
+        }
+        .challenge-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .challenge-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 15px;
+        }
+        .challenge-icon {
+          font-size: 2em;
+          margin-right: 15px;
+        }
+        .challenge-title {
+          font-size: 1.3em;
+          font-weight: 700;
+          color: var(--main-dark);
+          font-family: 'Montserrat', sans-serif;
+        }
+        .challenge-description {
+          margin-bottom: 20px;
+          line-height: 1.6;
+          color: var(--main-text);
+        }
+        .best-practices h4 {
+          color: #4caf50;
+          margin-bottom: 12px;
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+        }
+        .best-practices ul {
+          list-style: none;
+          padding: 0;
+        }
+        .best-practices li {
+          margin-bottom: 8px;
+          padding-left: 20px;
+          position: relative;
+          color: var(--main-text);
+        }
+        .best-practices li::before {
+          content: '✓';
+          position: absolute;
+          left: 0;
+          color: #4caf50;
+          font-weight: 700;
+        }
+        .training-resources {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 30px;
+          margin: 40px 0;
+        }
+        .resource-card {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          box-shadow: 0 8px 30px rgba(34,51,102,0.1);
+          border: 3px solid transparent;
+          transition: all 0.4s ease;
+          text-align: center;
+        }
+        .resource-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 60px rgba(255,153,0,0.2);
+          border-color: var(--amazon-orange);
+        }
+        .resource-icon {
+          font-size: 3em;
+          margin-bottom: 15px;
+        }
+        .resource-title {
+          font-size: 1.4em;
+          font-weight: 700;
+          color: var(--amazon-blue);
+          margin-bottom: 15px;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .resource-description {
+          margin-bottom: 20px;
+          line-height: 1.6;
+          color: var(--main-text);
+        }
+        .resource-features {
+          list-style: none;
+          padding: 0;
+          text-align: left;
+        }
+        .resource-features li {
+          margin-bottom: 8px;
+          padding-left: 20px;
+          position: relative;
+          color: var(--main-text);
+        }
+        .resource-features li::before {
+          content: '🎯';
+          position: absolute;
+          left: 0;
+        }
+        .partyrock-demo {
+          background: linear-gradient(135deg, #ffffff, #f8f9fa);
+          border-radius: 20px;
+          padding: 30px;
+          margin: 25px 0;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+          position: relative;
+          z-index: 2;
+          min-height: 500px;
+        }
+        .demo-workspace {
+          display: grid;
+          grid-template-columns: 200px 1fr;
+          gap: 20px;
+          min-height: 400px;
+        }
+        .demo-sidebar {
+          background: #f8f9fa;
+          border-radius: 10px;
+          padding: 15px;
+        }
+        .demo-sidebar h4 {
+          margin-top: 0;
+          margin-bottom: 15px;
+          color: var(--amazon-blue);
+          font-family: 'Montserrat', sans-serif;
+        }
+        .component-item {
+          background: white;
+          padding: 10px;
+          margin-bottom: 10px;
+          border-radius: 8px;
+          cursor: grab;
+          border: 2px solid #e0e0e0;
+          transition: all 0.3s ease;
+          font-size: 0.9em;
+          text-align: center;
+        }
+        .component-item:hover {
+          border-color: var(--amazon-orange);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(255,153,0,0.2);
+        }
+        .component-item:active {
+          cursor: grabbing;
+        }
+        .demo-canvas {
+          background: white;
+          border: 2px dashed #ccc;
+          border-radius: 10px;
+          padding: 20px;
+          min-height: 300px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+        }
+        .canvas-placeholder {
+          text-align: center;
+          color: #888;
+          font-size: 1.1em;
+          line-height: 1.6;
+        }
+        .dropped-component {
+          background: linear-gradient(135deg, var(--amazon-orange), #ffb84d);
+          color: white;
+          padding: 12px 20px;
+          margin: 10px;
+          border-radius: 20px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-block;
+        }
+        .dropped-component:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 15px rgba(255,153,0,0.3);
+        }
+        .demo-output {
+          margin-top: 20px;
+          padding: 20px;
+          background: #e8f5e8;
+          border-radius: 10px;
+          border-left: 4px solid #4caf50;
+        }
+        .output-title {
+          font-weight: 700;
+          color: #2e7d32;
+          margin-bottom: 10px;
+          font-family: 'Montserrat', sans-serif;
+        }
+        .output-content {
+          color: #1b5e20;
+          white-space: pre-line;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+          .demo-workspace {
+            grid-template-columns: 1fr;
+          }
+          .demo-sidebar {
+            order: 2;
+          }
+          .demo-canvas {
+            order: 1;
+            min-height: 200px;
+          }
+          .platform-grid,
+          .use-cases,
+          .challenges-grid,
+          .training-resources {
+            grid-template-columns: 1fr;
+          }
+          .comparison-table {
+            font-size: 0.9em;
+          }
+          .pricing-table {
+            grid-template-columns: 1fr;
+          }
+        }
+      </style>
+    `;
+    document.head.insertAdjacentHTML('beforeend', additionalStyles);
+  </script>
+</body>
+</html>
